@@ -464,8 +464,9 @@
             h2 { font-size: 1.5rem; }
             h3 { font-size: 1rem; }
             
+            /* Moved padding here to ensure it works with scroll */
             .content-wrapper { 
-                padding: 0 1rem; 
+                padding: 0 1rem 10rem 1rem; /* Large bottom padding to clear fixed nav */
                 width: 100%; 
                 box-sizing: border-box;
             }
@@ -482,13 +483,12 @@
             .chart-placeholder svg { width: 100%; height: auto; }
             
             .slide { 
-                padding: 5rem 1rem 8rem 1rem; /* Increased bottom padding for safe area */
+                padding: 5rem 0 0 0; /* Only top padding on container */
                 display: block; 
-                overflow-y: scroll; /* Force scroll behavior */
+                overflow-y: auto; 
                 overflow-x: hidden;
                 -webkit-overflow-scrolling: touch;
-                height: 100dvh; /* Dynamic viewport height */
-                height: 100vh; /* Fallback */
+                height: 100%; /* Fill viewport */
             }
             
             /* Stack logo and controls */
