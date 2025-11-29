@@ -382,14 +382,55 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
         }
+
+        .lang-selector {
+            position: fixed;
+            top: 2rem;
+            right: 14rem; /* Positioned to the left of bg-controls */
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            z-index: 100;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border-radius: 0;
+        }
+
+        .lang-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lang-btn.active {
+            background: var(--accent-primary);
+            color: white;
+        }
     </style>
 </head>
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
+<div class="lang-selector">
+    <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+    <button class="lang-btn" onclick="setLanguage('es')">ES</button>
+</div>
+
 <div id="bgControls" class="bg-controls">
-    <div class="bg-controls-header" id="bgDragHandle">Background FX</div>
+    <div class="bg-controls-header" id="bgDragHandle" data-i18n="controls_bg_title">Background FX</div>
     <div class="bg-controls-content">
         <button class="bg-btn" onclick="switchBg('attractor')">Attractor</button>
         <button class="bg-btn" onclick="switchBg('cosmic-quantum')">Cosmic</button>
@@ -398,7 +439,7 @@
         <button class="bg-btn" onclick="switchBg('flow-field')">Flow Field</button>
         
         <div class="control-group">
-            <label class="control-label" for="bgOpacity">Intensity</label>
+            <label class="control-label" for="bgOpacity" data-i18n="controls_bg_intensity">Intensity</label>
             <input type="range" id="bgOpacity" min="0" max="1" step="0.01" value="0.2">
         </div>
     </div>
@@ -413,18 +454,18 @@
         <div class="content-wrapper">
             <div class="tag">
                 <img src="assets/monad.svg" alt="Monad Logo" style="height: 1.2em; vertical-align: text-bottom; margin-right: 0.5rem;">
-                Live on Monad Testnet
+                <span data-i18n="hero_tag">Live on Monad Testnet</span>
             </div>
-            <h1>Noma Protocol</h1>
-            <p style="font-size: 1.5rem; color: #9ca3af;">The Next-Generation DeFi Launchpad</p>
+            <h1 data-i18n="hero_title">Noma Protocol</h1>
+            <p style="font-size: 1.5rem; color: #9ca3af;" data-i18n="hero_subtitle">The Next-Generation DeFi Launchpad</p>
             <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
                 <div style="padding: 1rem 2rem; border-left: 2px solid var(--accent-primary); text-align: left;">
-                    <div style="color: white; font-weight: bold;">Fairness</div>
-                    <div style="font-size: 0.9rem;">Baked at protocol level</div>
+                    <div style="color: white; font-weight: bold;" data-i18n="hero_fairness_title">Fairness</div>
+                    <div style="font-size: 0.9rem;" data-i18n="hero_fairness_desc">Baked at protocol level</div>
                 </div>
                 <div style="padding: 1rem 2rem; border-left: 2px solid var(--accent-secondary); text-align: left;">
-                    <div style="color: white; font-weight: bold;">Liquidity</div>
-                    <div style="font-size: 0.9rem;">Programmatic & Automated</div>
+                    <div style="color: white; font-weight: bold;" data-i18n="hero_liquidity_title">Liquidity</div>
+                    <div style="font-size: 0.9rem;" data-i18n="hero_liquidity_desc">Programmatic & Automated</div>
                 </div>
             </div>
         </div>
@@ -433,18 +474,18 @@
     <!-- Slide 2: Mission -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>Our Mission</h3>
-            <h2>Revolutionizing Token Launches</h2>
-            <p>The current status-quo of token launches is broken. Noma combines the efficiency of AMMs (Uniswap V3, PancakeSwap) with advanced primitives: automatic liquidity rebalancing, elastic supply, and self-repaying loans.</p>
+            <h3 data-i18n="mission_eyebrow">Our Mission</h3>
+            <h2 data-i18n="mission_title">Revolutionizing Token Launches</h2>
+            <p data-i18n="mission_text">The current status-quo of token launches is broken. Noma combines the efficiency of AMMs (Uniswap V3, PancakeSwap) with advanced primitives: automatic liquidity rebalancing, elastic supply, and self-repaying loans.</p>
             
             <div class="grid-2">
                 <div class="card">
-                    <h4 style="color:white; margin-top:0;">For Founders</h4>
-                    <p style="font-size: 1rem;">Automated tokenomics and fair distribution without the complexity.</p>
+                    <h4 style="color:white; margin-top:0;" data-i18n="mission_card_founders_title">For Founders</h4>
+                    <p style="font-size: 1rem;" data-i18n="mission_card_founders_text">Automated tokenomics and fair distribution without the complexity.</p>
                 </div>
                 <div class="card">
-                    <h4 style="color:white; margin-top:0;">For Holders</h4>
-                    <p style="font-size: 1rem;">Transparency, safety, and guaranteed liquidity backing.</p>
+                    <h4 style="color:white; margin-top:0;" data-i18n="mission_card_holders_title">For Holders</h4>
+                    <p style="font-size: 1rem;" data-i18n="mission_card_holders_text">Transparency, safety, and guaranteed liquidity backing.</p>
                 </div>
             </div>
         </div>
@@ -453,15 +494,15 @@
     <!-- Slide 3: Problem (Founders) -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>The Founder's Dilemma</h3>
-            <h2>Distribution is Hard</h2>
+            <h3 data-i18n="problem_founders_eyebrow">The Founder's Dilemma</h3>
+            <h2 data-i18n="problem_founders_title">Distribution is Hard</h2>
             <div class="grid-2">
                 <div>
-                    <p>Launching a token today involves balancing fairness, transparency, and sustainable tokenomics. This complexity often leads to critical failures:</p>
+                    <p data-i18n="problem_founders_text">Launching a token today involves balancing fairness, transparency, and sustainable tokenomics. This complexity often leads to critical failures:</p>
                     <ul>
-                        <li><strong>Rug Pulls:</strong> Insiders exit, leaving investors with worthless assets.</li>
-                        <li><strong>Liquidity Issues:</strong> Centralized control leads to manipulation.</li>
-                        <li><strong>Misaligned Incentives:</strong> Difficulty in aligning long-term goals with short-term pressure.</li>
+                        <li><strong data-i18n="problem_founders_list_1_title">Rug Pulls:</strong> <span data-i18n="problem_founders_list_1_text">Insiders exit, leaving investors with worthless assets.</span></li>
+                        <li><strong data-i18n="problem_founders_list_2_title">Liquidity Issues:</strong> <span data-i18n="problem_founders_list_2_text">Centralized control leads to manipulation.</span></li>
+                        <li><strong data-i18n="problem_founders_list_3_title">Misaligned Incentives:</strong> <span data-i18n="problem_founders_list_3_text">Difficulty in aligning long-term goals with short-term pressure.</span></li>
                     </ul>
                 </div>
                 <div style="display: flex; align-items: center; justify-content: center;">
@@ -494,15 +535,15 @@
     <!-- Slide 4: Problem (Holders) -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>The Investor's Reality</h3>
-            <h2>Broken Expectations</h2>
+            <h3 data-i18n="problem_holders_eyebrow">The Investor's Reality</h3>
+            <h2 data-i18n="problem_holders_title">Broken Expectations</h2>
             <div class="grid-2">
                 <div style="order: 2;">
-                    <p>The crypto industry has become a "cut-throat" environment. Investors are often the product, not the partner.</p>
+                    <p data-i18n="problem_holders_text">The crypto industry has become a "cut-throat" environment. Investors are often the product, not the partner.</p>
                     <ul>
-                        <li><strong>Value Extraction:</strong> Projects designed to extract rather than create utility.</li>
-                        <li><strong>Lack of Trust:</strong> Exploitation leads to disillusionment.</li>
-                        <li><strong>Wealth Concentration:</strong> Insiders hold the majority of supply and power.</li>
+                        <li><strong data-i18n="problem_holders_list_1_title">Value Extraction:</strong> <span data-i18n="problem_holders_list_1_text">Projects designed to extract rather than create utility.</span></li>
+                        <li><strong data-i18n="problem_holders_list_2_title">Lack of Trust:</strong> <span data-i18n="problem_holders_list_2_text">Exploitation leads to disillusionment.</span></li>
+                        <li><strong data-i18n="problem_holders_list_3_title">Wealth Concentration:</strong> <span data-i18n="problem_holders_list_3_text">Insiders hold the majority of supply and power.</span></li>
                     </ul>
                 </div>
                 <div style="order: 1; display: flex; align-items: center; justify-content: center;">
@@ -530,26 +571,26 @@
     <!-- Slide 5: Solution Overview -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>The Noma Solution</h3>
-            <h2>Automated Tokenomics</h2>
-            <p>Noma introduces a paradigm shift: Tokens that seed their own liquidity.</p>
+            <h3 data-i18n="solution_eyebrow">The Noma Solution</h3>
+            <h2 data-i18n="solution_title">Automated Tokenomics</h2>
+            <p data-i18n="solution_text">Noma introduces a paradigm shift: Tokens that seed their own liquidity.</p>
             
             <div class="grid-2">
                 <div class="card">
-                    <div class="highlight">Middleware Market Maker</div>
-                    <p>The protocol acts as the market maker for the liquidity it controls.</p>
+                    <div class="highlight" data-i18n="solution_card_1_title">Middleware Market Maker</div>
+                    <p data-i18n="solution_card_1_text">The protocol acts as the market maker for the liquidity it controls.</p>
                 </div>
                 <div class="card">
-                    <div class="highlight">Algorithmic Structure</div>
-                    <p>Automatic liquidity rebalancing with configurable shape and elastic supply.</p>
+                    <div class="highlight" data-i18n="solution_card_2_title">Algorithmic Structure</div>
+                    <p data-i18n="solution_card_2_text">Automatic liquidity rebalancing with configurable shape and elastic supply.</p>
                 </div>
                 <div class="card">
-                    <div class="highlight">Revenue Feedback</div>
-                    <p>Protocol revenue is fed back into liquidity, constantly increasing the floor price.</p>
+                    <div class="highlight" data-i18n="solution_card_3_title">Revenue Feedback</div>
+                    <p data-i18n="solution_card_3_text">Protocol revenue is fed back into liquidity, constantly increasing the floor price.</p>
                 </div>
                 <div class="card">
-                    <div class="highlight">Self-Sufficient</div>
-                    <p>No need for external market makers or complex liquidity management teams.</p>
+                    <div class="highlight" data-i18n="solution_card_4_title">Self-Sufficient</div>
+                    <p data-i18n="solution_card_4_text">No need for external market makers or complex liquidity management teams.</p>
                 </div>
             </div>
         </div>
@@ -558,22 +599,22 @@
     <!-- Slide 6: Deep Dive - Liquidity -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>Core Technology</h3>
-            <h2>1:1 Backing & Floor Price</h2>
-            <p>We don't just promise liquidity; we enforce it at the code level.</p>
+            <h3 data-i18n="tech_eyebrow">Core Technology</h3>
+            <h2 data-i18n="tech_title">1:1 Backing & Floor Price</h2>
+            <p data-i18n="tech_text">We don't just promise liquidity; we enforce it at the code level.</p>
             
             <div style="margin-top: 2rem;">
                 <div class="roadmap-item">
-                    <div class="roadmap-date" style="color: var(--accent-tertiary);">GUARANTEE</div>
-                    <div>The protocol can buy back the <strong>whole circulating supply</strong> at any time.</div>
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);" data-i18n="tech_item_1_date">GUARANTEE</div>
+                    <div data-i18n="tech_item_1_text">The protocol can buy back the <strong>whole circulating supply</strong> at any time.</div>
                 </div>
                 <div class="roadmap-item">
-                    <div class="roadmap-date" style="color: var(--accent-tertiary);">BACKING</div>
-                    <div>Tokens outside protocol control are backed <strong>1:1</strong> by real liquidity at the floor price.</div>
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);" data-i18n="tech_item_2_date">BACKING</div>
+                    <div data-i18n="tech_item_2_text">Tokens outside protocol control are backed <strong>1:1</strong> by real liquidity at the floor price.</div>
                 </div>
                 <div class="roadmap-item">
-                    <div class="roadmap-date" style="color: var(--accent-tertiary);">CONTROL</div>
-                    <div>Liquidity is owned by the <strong>protocol</strong>, not insiders.</div>
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);" data-i18n="tech_item_3_date">CONTROL</div>
+                    <div data-i18n="tech_item_3_text">Liquidity is owned by the <strong>protocol</strong>, not insiders.</div>
                 </div>
             </div>
             
@@ -613,30 +654,30 @@
     <!-- Slide 7: Innovative Features -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>Features</h3>
-            <h2>Beyond Just Launching</h2>
+            <h3 data-i18n="features_eyebrow">Features</h3>
+            <h2 data-i18n="features_title">Beyond Just Launching</h2>
             <div class="grid-2">
                 <div>
                     <ul>
                         <li>
-                            <strong style="color:white;">Algorithmic Liquidity</strong>
-                            <br>Creators configure liquidity shape & elastic supply. Automatic rebalancing drives consistent value.
+                            <strong style="color:white;" data-i18n="features_list_1_title">Algorithmic Liquidity</strong>
+                            <br><span data-i18n="features_list_1_text">Creators configure liquidity shape & elastic supply. Automatic rebalancing drives consistent value.</span>
                         </li>
                         <li>
-                            <strong style="color:white;">Self-Repaying Loans</strong>
-                            <br>Loans automatically repay from protocol profits when LTV exceeds healthy thresholds.
+                            <strong style="color:white;" data-i18n="features_list_2_title">Self-Repaying Loans</strong>
+                            <br><span data-i18n="features_list_2_text">Loans automatically repay from protocol profits when LTV exceeds healthy thresholds.</span>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <ul>
                         <li>
-                            <strong style="color:white;">Dividend Distribution</strong>
-                            <br>Rebalancing mints tokens for staking pools, creators, and the protocol.
+                            <strong style="color:white;" data-i18n="features_list_3_title">Dividend Distribution</strong>
+                            <br><span data-i18n="features_list_3_text">Rebalancing mints tokens for staking pools, creators, and the protocol.</span>
                         </li>
                         <li>
-                            <strong style="color:white;">Escrowed Returns</strong>
-                            <br>Dividends are escrowed over 6 months with linear release to align long-term incentives.
+                            <strong style="color:white;" data-i18n="features_list_4_title">Escrowed Returns</strong>
+                            <br><span data-i18n="features_list_4_text">Dividends are escrowed over 6 months with linear release to align long-term incentives.</span>
                         </li>
                     </ul>
                 </div>
@@ -647,39 +688,39 @@
     <!-- Slide 8: Business Model -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>Sustainability</h3>
-            <h2>Economic Flywheel</h2>
+            <h3 data-i18n="business_eyebrow">Sustainability</h3>
+            <h2 data-i18n="business_title">Economic Flywheel</h2>
             <div class="grid-2">
                 <div class="card" style="text-align: center;">
-                    <div class="big-stat">Dual Yield</div>
-                    <div class="stat-label">Fees + Rebalancing</div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem;">Earns from underlying AMM trading fees AND algorithmic liquidity rebalancing.</p>
+                    <div class="big-stat" data-i18n="business_card_1_stat">Dual Yield</div>
+                    <div class="stat-label" data-i18n="business_card_1_label">Fees + Rebalancing</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;" data-i18n="business_card_1_text">Earns from underlying AMM trading fees AND algorithmic liquidity rebalancing.</p>
                 </div>
                 <div class="card" style="text-align: center;">
-                    <div class="big-stat">Dividends</div>
-                    <div class="stat-label">To Holders</div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem;">Profits are redirected to token holders as dividends (6-month linear escrow).</p>
+                    <div class="big-stat" data-i18n="business_card_2_stat">Dividends</div>
+                    <div class="stat-label" data-i18n="business_card_2_label">To Holders</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;" data-i18n="business_card_2_text">Profits are redirected to token holders as dividends (6-month linear escrow).</p>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 2rem; font-style: italic;">"When liquidity rebalances upwards, tokens are minted and distributed to stakers, creators, and the protocol."</p>
+            <p style="text-align: center; margin-top: 2rem; font-style: italic;" data-i18n="business_quote">"When liquidity rebalances upwards, tokens are minted and distributed to stakers, creators, and the protocol."</p>
         </div>
     </div>
 
     <!-- Slide 9: Noma Holders -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>For Token Holders</h3>
-            <h2>The Ultimate Yield Asset</h2>
-            <p>$NOMA isn't just a governance token. It's a claim on the success of every project launched on the protocol.</p>
+            <h3 data-i18n="holders_eyebrow">For Token Holders</h3>
+            <h2 data-i18n="holders_title">The Ultimate Yield Asset</h2>
+            <p data-i18n="holders_text">$NOMA isn't just a governance token. It's a claim on the success of every project launched on the protocol.</p>
             
             <div class="grid-2">
                 <div>
                     <div class="card" style="height: 100%; box-sizing: border-box;">
-                        <div class="highlight">Launchpad Index</div>
-                        <p style="margin-top: 1rem;">Holding $NOMA provides exposure to a diversified stream of tokens from every successful launch.</p>
+                        <div class="highlight" data-i18n="holders_card_title">Launchpad Index</div>
+                        <p style="margin-top: 1rem;" data-i18n="holders_card_text">Holding $NOMA provides exposure to a diversified stream of tokens from every successful launch.</p>
                         <ul style="margin-top: 1.5rem;">
-                            <li><strong>Passive Accumulation:</strong> No active trading required.</li>
-                            <li><strong>Diversified Portfolio:</strong> Automatically build a bag of new ecosystem tokens.</li>
+                            <li><strong data-i18n="holders_list_1_title">Passive Accumulation:</strong> <span data-i18n="holders_list_1_text">No active trading required.</span></li>
+                            <li><strong data-i18n="holders_list_2_title">Diversified Portfolio:</strong> <span data-i18n="holders_list_2_text">Automatically build a bag of new ecosystem tokens.</span></li>
                         </ul>
                     </div>
                 </div>
@@ -713,13 +754,13 @@
                             
                             <!-- Noma Holder Wallet (Right) -->
                             <rect x="250" y="40" width="120" height="70" rx="10" fill="rgba(22, 27, 34, 0.8)" stroke="var(--accent-primary)" stroke-width="2"/>
-                            <text x="310" y="80" fill="white" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">$NOMA Holder</text>
-                            <text x="310" y="95" fill="var(--accent-tertiary)" font-family="sans-serif" font-size="10" text-anchor="middle">YIELD ESCROWED</text>
+                            <text x="310" y="80" fill="white" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold" data-i18n="holders_graphic_title">$NOMA Holder</text>
+                            <text x="310" y="95" fill="var(--accent-tertiary)" font-family="sans-serif" font-size="10" text-anchor="middle" data-i18n="holders_graphic_sub">YIELD ESCROWED</text>
                         </svg>
                     </div>
                     <div style="text-align: center; font-size: 0.9rem; color: var(--accent-tertiary);">
-                        <strong>6-Month Linear Release</strong><br>
-                        <span style="color: #9ca3af;">Aligning incentives for long-term growth.</span>
+                        <strong data-i18n="holders_graphic_footer_title">6-Month Linear Release</strong><br>
+                        <span style="color: #9ca3af;" data-i18n="holders_graphic_footer_text">Aligning incentives for long-term growth.</span>
                     </div>
                 </div>
             </div>
@@ -729,31 +770,31 @@
     <!-- Slide 10: Roadmap -->
     <div class="slide">
         <div class="content-wrapper">
-            <h3>Trajectory</h3>
-            <h2>Roadmap & Status</h2>
+            <h3 data-i18n="roadmap_eyebrow">Trajectory</h3>
+            <h2 data-i18n="roadmap_title">Roadmap & Status</h2>
             
             <div class="card" style="width: 100%; box-sizing: border-box;">
                 <div class="roadmap-item">
-                    <div class="roadmap-date" style="color: var(--accent-tertiary);">CURRENT</div>
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);" data-i18n="roadmap_item_1_date">CURRENT</div>
                     <div>
                         <strong>
                             <img src="assets/monad.svg" alt="Monad Logo" style="height: 1em; vertical-align: text-bottom; margin-right: 0.3rem;">
-                            Live on Monad Testnet
+                            <span data-i18n="roadmap_item_1_title">Live on Monad Testnet</span>
                         </strong>
-                        <br>Core protocol operational, testing liquidity curves.
+                        <br><span data-i18n="roadmap_item_1_text">Core protocol operational, testing liquidity curves.</span>
                     </div>
                 </div>
                 <div class="roadmap-item">
-                    <div class="roadmap-date">Q2 2026</div>
-                    <div><strong>Mainnet Launch</strong><br>Full deployment, initial batch of partnered launches.</div>
+                    <div class="roadmap-date" data-i18n="roadmap_item_2_date">Q2 2026</div>
+                    <div><strong data-i18n="roadmap_item_2_title">Mainnet Launch</strong><br><span data-i18n="roadmap_item_2_text">Full deployment, initial batch of partnered launches.</span></div>
                 </div>
                 <div class="roadmap-item">
-                    <div class="roadmap-date">Q3 2026</div>
-                    <div><strong>Ecosystem Expansion</strong><br>Cross-chain integrations and advanced DAO governance tools.</div>
+                    <div class="roadmap-date" data-i18n="roadmap_item_3_date">Q3 2026</div>
+                    <div><strong data-i18n="roadmap_item_3_title">Ecosystem Expansion</strong><br><span data-i18n="roadmap_item_3_text">Cross-chain integrations and advanced DAO governance tools.</span></div>
                 </div>
                 <div class="roadmap-item">
-                    <div class="roadmap-date">Q4 2026</div>
-                    <div><strong>Noma Pro</strong><br>Institutional grade tools for large scale asset issuance.</div>
+                    <div class="roadmap-date" data-i18n="roadmap_item_4_date">Q4 2026</div>
+                    <div><strong data-i18n="roadmap_item_4_title">Noma Pro</strong><br><span data-i18n="roadmap_item_4_text">Institutional grade tools for large scale asset issuance.</span></div>
                 </div>
             </div>
         </div>
@@ -762,19 +803,19 @@
     <!-- Slide 11: Contact -->
     <div class="slide">
         <div class="content-wrapper" style="text-align: center;">
-            <h3>Join Us</h3>
-            <h2>The Future of Fair Launches</h2>
-            <p>Ready to build the next generation of DeFi?</p>
+            <h3 data-i18n="contact_eyebrow">Join Us</h3>
+            <h2 data-i18n="contact_title">The Future of Fair Launches</h2>
+            <p data-i18n="contact_text">Ready to build the next generation of DeFi?</p>
             
             <div style="margin-top: 3rem;">
                 <a href="#" style="text-decoration: none;">
-                    <button style="background: var(--accent-primary); border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: bold;">Launch App</button>
+                    <button style="background: var(--accent-primary); border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: bold;" data-i18n="contact_btn">Launch App</button>
                 </a>
                 <br><br>
                 <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem;">
-                    <span style="color: #9ca3af;">Twitter: @NomaProtocol</span>
-                    <span style="color: #9ca3af;">Discord: Noma Community</span>
-                    <span style="color: #9ca3af;">Web: noma.fi</span>
+                    <span style="color: #9ca3af;" data-i18n="contact_twitter">Twitter: @NomaProtocol</span>
+                    <span style="color: #9ca3af;" data-i18n="contact_discord">Discord: Noma Community</span>
+                    <span style="color: #9ca3af;" data-i18n="contact_web">Web: noma.fi</span>
                 </div>
             </div>
         </div>
@@ -782,8 +823,8 @@
 
     <div class="controls">
         <span id="slideCounter" style="margin-right: 1rem; color: #6b7280;">1 / 11</span>
-        <button onclick="prevSlide()" id="prevBtn">Previous</button>
-        <button onclick="nextSlide()" id="nextBtn">Next</button>
+        <button onclick="prevSlide()" id="prevBtn" data-i18n="controls_prev">Previous</button>
+        <button onclick="nextSlide()" id="nextBtn" data-i18n="controls_next">Next</button>
     </div>
 
 </div>
@@ -839,8 +880,39 @@
     updateSlide();
 </script>
 
+<script src="translations.js"></script>
 <script src="background-effects.js"></script>
 <script>
+    // Translation Logic
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+        if (!translations[lang]) return;
+        currentLang = lang;
+        
+        // Update content
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                // Check if text contains HTML
+                if (translations[lang][key].includes('<')) {
+                    element.innerHTML = translations[lang][key];
+                } else {
+                    element.textContent = translations[lang][key];
+                }
+            }
+        });
+
+        // Update buttons state
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.textContent.toLowerCase() === lang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
     // Initialize background
     // You can pass 'attractor', 'convolution', or leave empty for random
     document.addEventListener('DOMContentLoaded', () => {
