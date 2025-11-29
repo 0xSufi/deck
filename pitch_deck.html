@@ -40,7 +40,7 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            opacity: 0.35; /* Toned down for better readability */
+            opacity: 0.2; /* Reduced to 0.2 for significantly lower intensity */
             transition: opacity 1s ease;
         }
 
@@ -398,7 +398,7 @@
         
         <div class="control-group">
             <label class="control-label" for="bgOpacity">Intensity</label>
-            <input type="range" id="bgOpacity" min="0" max="1" step="0.05" value="0.35">
+            <input type="range" id="bgOpacity" min="0" max="1" step="0.01" value="0.2">
         </div>
     </div>
 </div>
@@ -431,7 +431,7 @@
         <div class="content-wrapper">
             <h3>Our Mission</h3>
             <h2>Revolutionizing Token Launches</h2>
-            <p>The current status-quo of token launches is broken. Noma combines the efficiency of Uniswap V3 with an advanced DeFi protocol to solve the fundamental issues of distribution and trust.</p>
+            <p>The current status-quo of token launches is broken. Noma combines the efficiency of AMMs (Uniswap V3, PancakeSwap) with advanced primitives: automatic liquidity rebalancing, elastic supply, and self-repaying loans.</p>
             
             <div class="grid-2">
                 <div class="card">
@@ -506,7 +506,7 @@
                 </div>
                 <div class="card">
                     <div class="highlight">Algorithmic Structure</div>
-                    <p>Liquidity is programmable and adjusts to market conditions automatically.</p>
+                    <p>Automatic liquidity rebalancing with configurable shape and elastic supply.</p>
                 </div>
                 <div class="card">
                     <div class="highlight">Revenue Feedback</div>
@@ -557,24 +557,24 @@
                 <div>
                     <ul>
                         <li>
-                            <strong style="color:white;">Configurable Liquidity Curve</strong>
-                            <br>Tailor the market structure to the project's specific needs.
+                            <strong style="color:white;">Algorithmic Liquidity</strong>
+                            <br>Creators configure liquidity shape & elastic supply. Automatic rebalancing drives consistent value.
                         </li>
                         <li>
-                            <strong style="color:white;">Liquidation-Free Loans</strong>
-                            <br>Borrow against assets without the fear of sudden liquidation cascades.
+                            <strong style="color:white;">Self-Repaying Loans</strong>
+                            <br>Loans automatically repay from protocol profits when LTV exceeds healthy thresholds.
                         </li>
                     </ul>
                 </div>
                 <div>
                     <ul>
                         <li>
-                            <strong style="color:white;">Native Staking</strong>
-                            <br>Integrated yield generation for long-term holders.
+                            <strong style="color:white;">Dividend Distribution</strong>
+                            <br>Rebalancing mints tokens for staking pools, creators, and the protocol.
                         </li>
                         <li>
-                            <strong style="color:white;">Fair Revenue Sharing</strong>
-                            <br>Founders and protocol interests are aligned through transparent revenue splits.
+                            <strong style="color:white;">Escrowed Returns</strong>
+                            <br>Dividends are escrowed over 6 months with linear release to align long-term incentives.
                         </li>
                     </ul>
                 </div>
@@ -589,17 +589,17 @@
             <h2>Economic Flywheel</h2>
             <div class="grid-2">
                 <div class="card" style="text-align: center;">
-                    <div class="big-stat">Fees</div>
-                    <div class="stat-label">Generated from Trading</div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem;">Trading fees are collected by the protocol.</p>
+                    <div class="big-stat">Dual Yield</div>
+                    <div class="stat-label">Fees + Rebalancing</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Earns from underlying AMM trading fees AND algorithmic liquidity rebalancing.</p>
                 </div>
                 <div class="card" style="text-align: center;">
-                    <div class="big-stat">Reinvest</div>
-                    <div class="stat-label">Into Liquidity</div>
-                    <p style="font-size: 0.9rem; margin-top: 1rem;">Revenue is automatically routed to deepen liquidity.</p>
+                    <div class="big-stat">Dividends</div>
+                    <div class="stat-label">To Holders</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Profits are redirected to token holders as dividends (6-month linear escrow).</p>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 2rem; font-style: italic;">"Revenue stream is fed back into the liquidity, which helps to increase the floor price of tokens over time."</p>
+            <p style="text-align: center; margin-top: 2rem; font-style: italic;">"When liquidity rebalances upwards, tokens are minted and distributed to stakers, creators, and the protocol."</p>
         </div>
     </div>
 
@@ -720,6 +720,9 @@
         // Initialize slider listener
         const opacitySlider = document.getElementById('bgOpacity');
         const canvas = document.getElementById('bgCanvas');
+        
+        // Sync on load to ensure CSS matches slider
+        canvas.style.opacity = opacitySlider.value;
         
         opacitySlider.addEventListener('input', (e) => {
             canvas.style.opacity = e.target.value;
