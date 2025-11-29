@@ -320,7 +320,7 @@
         .bg-controls {
             position: fixed;
             top: 2rem;
-            right: 2rem;
+            right: 2rem; /* Reverted to top right */
             width: 160px;
             background: rgba(22, 27, 34, 0.8);
             backdrop-filter: blur(12px);
@@ -330,6 +330,23 @@
             padding: 0;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             transition: opacity 0.3s;
+        }
+
+        .lang-selector {
+            position: left;
+            top: 2rem;
+            right: 14rem; /* Reverted to original position (left of bg-controls) */
+            left: auto; /* Ensure it respects right */
+            width: auto; /* Allow width to adjust */
+            /* background: rgba(22, 27, 34, 0.8); */
+            backdrop-filter: blur(12px);
+            /* border: 1px solid var(--border-color); */
+            border-radius: 12px;
+            z-index: 100;
+            flex-direction: column; /* Stack header and content */
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex; /* Make it a flex container */
         }
         
         .bg-controls.collapsed .bg-controls-content {
@@ -501,7 +518,11 @@
             
             .lang-selector {
                 top: 0.5rem;
-                left: 0.5rem; 
+                right: 3.5rem; /* Reverted mobile position */
+                left: auto; /* Ensure it respects right */
+                width: auto;
+                min-width: unset;
+                border-radius: 8px;
             }
             
             /* Ensure hero logo is visible and scaled */
@@ -525,7 +546,13 @@
                 box-sizing: border-box;
                 z-index: 20;
             }
-            
+
+            @media (max-width: 380px) {
+                .controls {
+                    margin-bottom: 20px;
+                }
+            }
+
             /* Force BG controls to look collapsed initially or simplified */
             .bg-controls-header {
                 padding: 0.5rem;
@@ -570,10 +597,10 @@
 <canvas id="bgCanvas"></canvas>
 
 <div id="langControls" class="lang-selector">
-    <div class="lang-controls-header" id="langDragHandle">
+    <!-- <div class="lang-controls-header" id="langDragHandle">
         <span data-i18n="controls_lang_title">Language</span>
-    </div>
-    <div class="lang-controls-content">
+    </div> -->
+    <div class="lang-controls-content" style="margin-top:10px;margin-left:10px">
         <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
         <button class="lang-btn" onclick="setLanguage('es')">ES</button>
     </div>
