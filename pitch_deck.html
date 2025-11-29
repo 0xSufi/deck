@@ -233,7 +233,8 @@
         }
 
         .tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.875rem;
@@ -410,7 +411,10 @@
     <!-- Slide 1: Title -->
     <div class="slide active hero-slide">
         <div class="content-wrapper">
-            <div class="tag">Live on Monad Testnet</div>
+            <div class="tag">
+                <img src="assets/monad.svg" alt="Monad Logo" style="height: 1.2em; vertical-align: text-bottom; margin-right: 0.5rem;">
+                Live on Monad Testnet
+            </div>
             <h1>Noma Protocol</h1>
             <p style="font-size: 1.5rem; color: #9ca3af;">The Next-Generation DeFi Launchpad</p>
             <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
@@ -661,7 +665,68 @@
         </div>
     </div>
 
-    <!-- Slide 9: Roadmap -->
+    <!-- Slide 9: Noma Holders -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>For Token Holders</h3>
+            <h2>The Ultimate Yield Asset</h2>
+            <p>$NOMA isn't just a governance token. It's a claim on the success of every project launched on the protocol.</p>
+            
+            <div class="grid-2">
+                <div>
+                    <div class="card" style="height: 100%; box-sizing: border-box;">
+                        <div class="highlight">Launchpad Index</div>
+                        <p style="margin-top: 1rem;">Holding $NOMA provides exposure to a diversified stream of tokens from every successful launch.</p>
+                        <ul style="margin-top: 1.5rem;">
+                            <li><strong>Passive Accumulation:</strong> No active trading required.</li>
+                            <li><strong>Diversified Portfolio:</strong> Automatically build a bag of new ecosystem tokens.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+                    <div class="chart-placeholder" style="height: 180px;">
+                        <svg width="400" height="150" viewBox="0 0 400 150" fill="none">
+                            <!-- Stream Definition -->
+                            <defs>
+                                <linearGradient id="streamGradient" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="var(--accent-secondary)" stop-opacity="0.1"/>
+                                    <stop offset="50%" stop-color="var(--accent-secondary)" stop-opacity="0.8"/>
+                                    <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="1"/>
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Project Tokens (Left) -->
+                            <circle cx="50" cy="30" r="15" fill="#ef4444" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/></circle>
+                            <circle cx="50" cy="75" r="15" fill="#10b981" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="3s" repeatCount="indefinite"/></circle>
+                            <circle cx="50" cy="120" r="15" fill="#fbbf24" opacity="0.8"><animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+                            
+                            <!-- Stream Paths -->
+                            <path d="M70 30 C150 30, 150 75, 250 75" stroke="url(#streamGradient)" stroke-width="4" stroke-dasharray="5 5">
+                                <animate attributeName="stroke-dashoffset" from="10" to="0" dur="1s" repeatCount="indefinite"/>
+                            </path>
+                            <path d="M70 75 C150 75, 150 75, 250 75" stroke="url(#streamGradient)" stroke-width="4" stroke-dasharray="5 5">
+                                <animate attributeName="stroke-dashoffset" from="10" to="0" dur="1s" repeatCount="indefinite"/>
+                            </path>
+                            <path d="M70 120 C150 120, 150 75, 250 75" stroke="url(#streamGradient)" stroke-width="4" stroke-dasharray="5 5">
+                                <animate attributeName="stroke-dashoffset" from="10" to="0" dur="1s" repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Noma Holder Wallet (Right) -->
+                            <rect x="250" y="40" width="120" height="70" rx="10" fill="rgba(22, 27, 34, 0.8)" stroke="var(--accent-primary)" stroke-width="2"/>
+                            <text x="310" y="80" fill="white" font-family="sans-serif" font-size="14" text-anchor="middle" font-weight="bold">$NOMA Holder</text>
+                            <text x="310" y="95" fill="var(--accent-tertiary)" font-family="sans-serif" font-size="10" text-anchor="middle">YIELD ESCROWED</text>
+                        </svg>
+                    </div>
+                    <div style="text-align: center; font-size: 0.9rem; color: var(--accent-tertiary);">
+                        <strong>6-Month Linear Release</strong><br>
+                        <span style="color: #9ca3af;">Aligning incentives for long-term growth.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Roadmap -->
     <div class="slide">
         <div class="content-wrapper">
             <h3>Trajectory</h3>
@@ -670,7 +735,13 @@
             <div class="card" style="width: 100%; box-sizing: border-box;">
                 <div class="roadmap-item">
                     <div class="roadmap-date" style="color: var(--accent-tertiary);">CURRENT</div>
-                    <div><strong>Live on Monad Testnet</strong><br>Core protocol operational, testing liquidity curves.</div>
+                    <div>
+                        <strong>
+                            <img src="assets/monad.svg" alt="Monad Logo" style="height: 1em; vertical-align: text-bottom; margin-right: 0.3rem;">
+                            Live on Monad Testnet
+                        </strong>
+                        <br>Core protocol operational, testing liquidity curves.
+                    </div>
                 </div>
                 <div class="roadmap-item">
                     <div class="roadmap-date">Q2 2026</div>
@@ -688,7 +759,7 @@
         </div>
     </div>
 
-    <!-- Slide 10: Contact -->
+    <!-- Slide 11: Contact -->
     <div class="slide">
         <div class="content-wrapper" style="text-align: center;">
             <h3>Join Us</h3>
@@ -710,7 +781,7 @@
     </div>
 
     <div class="controls">
-        <span id="slideCounter" style="margin-right: 1rem; color: #6b7280;">1 / 10</span>
+        <span id="slideCounter" style="margin-right: 1rem; color: #6b7280;">1 / 11</span>
         <button onclick="prevSlide()" id="prevBtn">Previous</button>
         <button onclick="nextSlide()" id="nextBtn">Next</button>
     </div>
