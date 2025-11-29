@@ -296,6 +296,15 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
             transition: opacity 0.3s;
         }
+        
+        .bg-controls.collapsed .bg-controls-content {
+            display: none;
+        }
+        
+        .bg-controls.collapsed {
+            width: auto;
+            min-width: 140px;
+        }
 
         .bg-controls-header {
             padding: 0.75rem;
@@ -308,6 +317,31 @@
             text-align: center;
             color: #9ca3af;
             user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bg-controls.collapsed .bg-controls-header {
+            border-bottom: none;
+            border-radius: 12px;
+        }
+
+        .bg-toggle-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0 0.5rem;
+            font-size: 1rem;
+            line-height: 1;
+            margin-left: 0.5rem;
+        }
+
+        .bg-toggle-btn:hover {
+            color: white;
+            background: transparent;
         }
 
         .bg-controls-header:active {
@@ -430,7 +464,10 @@
 </div>
 
 <div id="bgControls" class="bg-controls">
-    <div class="bg-controls-header" id="bgDragHandle" data-i18n="controls_bg_title">Background FX</div>
+    <div class="bg-controls-header" id="bgDragHandle">
+        <span data-i18n="controls_bg_title">Background FX</span>
+        <button id="bgToggleBtn" class="bg-toggle-btn">–</button>
+    </div>
     <div class="bg-controls-content">
         <button class="bg-btn" onclick="switchBg('attractor')">Attractor</button>
         <button class="bg-btn" onclick="switchBg('cosmic-quantum')">Cosmic</button>
@@ -446,7 +483,6 @@
 </div>
 
 <div class="slides-container" id="slidesContainer">
-    <img src="assets/logo.svg" alt="Noma Protocol Logo" class="logo">
     <div class="progress" id="progressBar"></div>
 
     <!-- Slide 1: Title -->
@@ -456,6 +492,7 @@
                 <img src="assets/monad.svg" alt="Monad Logo" style="height: 1.2em; vertical-align: text-bottom; margin-right: 0.5rem;">
                 <span data-i18n="hero_tag">Live on Monad Testnet</span>
             </div>
+            <img src="assets/logo.svg" alt="Noma Protocol Logo" style="display: block; margin: 1.5rem auto; height: 100px; filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.4));">
             <h1 data-i18n="hero_title">Noma Protocol</h1>
             <p style="font-size: 1.5rem; color: #9ca3af;" data-i18n="hero_subtitle">The Next-Generation DeFi Launchpad</p>
             <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
@@ -944,6 +981,15 @@
             }
         });
     }
+
+    // Toggle Collapse
+    const toggleBtn = document.getElementById('bgToggleBtn');
+    toggleBtn.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent drag start
+    toggleBtn.addEventListener('click', () => {
+        const controls = document.getElementById('bgControls');
+        controls.classList.toggle('collapsed');
+        toggleBtn.textContent = controls.classList.contains('collapsed') ? '+' : '–';
+    });
 
     // Draggable Logic
     const dragElement = document.getElementById("bgControls");
