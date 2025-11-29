@@ -131,7 +131,8 @@ const translations = {
         controls_prev: "Previous",
         controls_next: "Next",
         controls_bg_title: "Background FX",
-        controls_bg_intensity: "Intensity"
+        controls_bg_intensity: "Intensity",
+        controls_lang_title: "Language"
     },
     es: {
         hero_tag: "En vivo en Monad Testnet",
@@ -265,6 +266,7 @@ const translations = {
         controls_prev: "Anterior",
         controls_next: "Siguiente",
         controls_bg_title: "Efectos de Fondo",
-        controls_bg_intensity: "Intensidad"
+        controls_bg_intensity: "Intensidad",
+        controls_lang_title: "Idioma"
     }
 };

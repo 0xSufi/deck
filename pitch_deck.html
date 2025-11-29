@@ -452,40 +452,123 @@
             border-radius: 2px;
         }
 
-        .lang-selector {
-            position: fixed;
-            top: 2rem;
-            right: 14rem; /* Positioned to the left of bg-controls */
-            background: rgba(22, 27, 34, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            z-index: 100;
-            display: flex;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
+        @media (max-width: 768px) {
+            body, html { overflow: hidden; } /* Keep main scroll hidden */
+            
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1rem; }
+            
+            .content-wrapper { 
+                padding: 0 1rem; 
+                width: 100%; 
+                box-sizing: border-box;
+            }
+            
+            .grid-2 { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem; 
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .card { padding: 1.25rem; }
+            .big-stat { font-size: 2.5rem; }
+            .chart-placeholder svg { width: 100%; height: auto; }
+            
+            .slide { 
+                padding: 5rem 1rem 6rem 1rem; /* Top padding for bg controls, Bottom for nav */
+                display: block; /* Remove flex centering to allow scroll */
+                overflow-y: auto;
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Stack logo and controls */
+            .bg-controls {
+                top: 0.5rem;
+                right: 0.5rem;
+                width: 40px; /* Collapsed width essentially */
+                min-width: 0;
+            }
+            
+            .lang-selector {
+                top: 0.5rem;
+                left: 0.5rem;
+                width: auto;
+                min-width: unset;
+                border-radius: 8px;
+            }
+            
+            .lang-controls-header {
+                font-size: 0.7rem;
+                padding: 0.3rem;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .lang-controls-content {
+                gap: 0.1rem;
+            }
+            
+            .lang-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+            
+            /* Ensure hero logo is visible and scaled */
+            .hero-slide img[alt="Noma Protocol Logo"] {
+                height: 60px !important;
+                margin: 1rem auto;
+            }
+            
+            .controls {
+                width: 100%;
+                justify-content: space-between;
+                bottom: 0;
+                right: 0;
+                padding: 1rem;
+                background: rgba(10, 11, 16, 0.9);
+                backdrop-filter: blur(10px);
+                border-top: 1px solid var(--border-color);
+                box-sizing: border-box;
+            }
+            
+            /* Force BG controls to look collapsed initially or simplified */
+            .bg-controls-header {
+                padding: 0.5rem;
+                justify-content: center;
+            }
+            
+            .bg-controls-header span {
+                display: none; /* Hide text on mobile to save space */
+            }
+            
+            .bg-toggle-btn {
+                margin: 0;
+                font-size: 1.2rem;
+            }
+            
+            .bg-controls:not(.collapsed) {
+                width: 160px;
+                right: 0.5rem;
+            }
+            
+            .bg-controls:not(.collapsed) .bg-controls-header span {
+                display: block;
+            }
 
-        .lang-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            background: transparent;
-            color: #9ca3af;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            border-radius: 0;
-        }
+            /* Stack social buttons on mobile */
+            .social-links {
+                flex-direction: column;
+                width: 100%;
+                gap: 1rem;
+            }
 
-        .lang-btn:hover {
-            color: white;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .lang-btn.active {
-            background: var(--accent-primary);
-            color: white;
+            .social-btn {
+                width: 100%;
+                justify-content: center;
+                box-sizing: border-box;
+            }
         }
     </style>
 </head>
@@ -493,9 +576,14 @@
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="lang-selector">
-    <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-    <button class="lang-btn" onclick="setLanguage('es')">ES</button>
+<div id="langControls" class="lang-selector">
+    <div class="lang-controls-header" id="langDragHandle">
+        <span data-i18n="controls_lang_title">Language</span>
+    </div>
+    <div class="lang-controls-content">
+        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="setLanguage('es')">ES</button>
+    </div>
 </div>
 
 <div id="bgControls" class="bg-controls">
@@ -1071,6 +1159,14 @@
     document.addEventListener('DOMContentLoaded', () => {
         initBackground('bgCanvas');
         
+        // Auto-collapse on mobile
+        if (window.innerWidth < 768) {
+            const controls = document.getElementById('bgControls');
+            const toggleBtn = document.getElementById('bgToggleBtn');
+            controls.classList.add('collapsed');
+            toggleBtn.textContent = '+';
+        }
+        
         // Initialize slider listener
         const opacitySlider = document.getElementById('bgOpacity');
         const canvas = document.getElementById('bgCanvas');
@@ -1107,44 +1203,85 @@
         toggleBtn.textContent = controls.classList.contains('collapsed') ? '+' : '–';
     });
 
-    // Draggable Logic
-    const dragElement = document.getElementById("bgControls");
-    const dragHandle = document.getElementById("bgDragHandle");
+    // Draggable Logic for Background Controls
+    const dragElementBg = document.getElementById("bgControls");
+    const dragHandleBg = document.getElementById("bgDragHandle");
     
-    let isDragging = false;
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
-    let xOffset = 0;
-    let yOffset = 0;
+    let isDraggingBg = false;
+    let currentXBg;
+    let currentYBg;
+    let initialXBg;
+    let initialYBg;
+    let xOffsetBg = 0;
+    let yOffsetBg = 0;
 
-    dragHandle.addEventListener("mousedown", dragStart);
-    document.addEventListener("mouseup", dragEnd);
-    document.addEventListener("mousemove", drag);
+    dragHandleBg.addEventListener("mousedown", dragStartBg);
+    document.addEventListener("mouseup", dragEndBg);
+    document.addEventListener("mousemove", dragBg);
 
-    function dragStart(e) {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
-        if (e.target === dragHandle) {
-            isDragging = true;
+    function dragStartBg(e) {
+        initialXBg = e.clientX - xOffsetBg;
+        initialYBg = e.clientY - yOffsetBg;
+        if (e.target === dragHandleBg) {
+            isDraggingBg = true;
         }
     }
 
-    function dragEnd(e) {
-        initialX = currentX;
-        initialY = currentY;
-        isDragging = false;
+    function dragEndBg(e) {
+        initialXBg = currentXBg;
+        initialYBg = currentYBg;
+        isDraggingBg = false;
     }
 
-    function drag(e) {
-        if (isDragging) {
+    function dragBg(e) {
+        if (isDraggingBg) {
             e.preventDefault();
-            currentX = e.clientX - initialX;
-            currentY = e.clientY - initialY;
-            xOffset = currentX;
-            yOffset = currentY;
-            setTranslate(currentX, currentY, dragElement);
+            currentXBg = e.clientX - initialXBg;
+            currentYBg = e.clientY - initialYBg;
+            xOffsetBg = currentXBg;
+            yOffsetBg = currentYBg;
+            setTranslate(currentXBg, currentYBg, dragElementBg);
+        }
+    }
+
+    // Draggable Logic for Language Controls
+    const dragElementLang = document.getElementById("langControls");
+    const dragHandleLang = document.getElementById("langDragHandle");
+    
+    let isDraggingLang = false;
+    let currentXLang;
+    let currentYLang;
+    let initialXLang;
+    let initialYLang;
+    let xOffsetLang = 0;
+    let yOffsetLang = 0;
+
+    dragHandleLang.addEventListener("mousedown", dragStartLang);
+    document.addEventListener("mouseup", dragEndLang);
+    document.addEventListener("mousemove", dragLang);
+
+    function dragStartLang(e) {
+        initialXLang = e.clientX - xOffsetLang;
+        initialYLang = e.clientY - yOffsetLang;
+        if (e.target === dragHandleLang) {
+            isDraggingLang = true;
+        }
+    }
+
+    function dragEndLang(e) {
+        initialXLang = currentXLang;
+        initialYLang = currentYLang;
+        isDraggingLang = false;
+    }
+
+    function dragLang(e) {
+        if (isDraggingLang) {
+            e.preventDefault();
+            currentXLang = e.clientX - initialXLang;
+            currentYLang = e.clientY - initialYLang;
+            xOffsetLang = currentXLang;
+            yOffsetLang = currentYLang;
+            setTranslate(currentXLang, currentYLang, dragElementLang);
         }
     }
 
