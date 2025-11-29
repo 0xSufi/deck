@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noma Protocol Pitch Deck</title>
+    <style>
+        :root {
+            --bg-color: #0a0b10;
+            --text-color: #e0e0e0;
+            --accent-primary: #6366f1; /* Indigo */
+            --accent-secondary: #a855f7; /* Purple */
+            --accent-tertiary: #10b981; /* Emerald */
+            --surface-color: rgba(22, 27, 34, 0.8); /* More transparent surface */
+            --border-color: #30363d;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: var(--font-main);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        html {
+            background-color: var(--bg-color);
+        }
+
+        body {
+            background-color: transparent;
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.35; /* Toned down for better readability */
+            transition: opacity 1s ease;
+        }
+
+        .logo {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            height: 40px; /* Adjust as needed */
+            z-index: 10; /* Ensure it's above slides */
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+        }
+
+        .slides-container {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            /* Vignette effect to darken edges and focus center */
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 11, 16, 0.8) 90%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3 {
+            text-shadow: 0 4px 12px rgba(0,0,0,0.8); /* Stronger contrast */
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            /* Re-apply shadow to container since text-fill removes it from text */
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5));
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        p, li {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #ccd6f6; /* Slightly brighter for readability */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        li::before {
+            content: "•";
+            color: var(--accent-secondary);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(22, 27, 34, 0.4); /* More transparent */
+            backdrop-filter: blur(16px) saturate(180%); /* Strong glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            background: rgba(22, 27, 34, 0.6);
+        }
+
+        .highlight {
+            color: var(--accent-tertiary);
+            font-weight: bold;
+        }
+
+        .big-stat {
+            font-size: 4rem;
+            font-weight: bold;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        button {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent-primary);
+            transition: width 0.3s ease;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            margin-bottom: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Specific slide adjustments */
+        .hero-slide {
+            text-align: center;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+            color: var(--accent-secondary);
+            border: 1px dashed var(--border-color);
+        }
+
+        .roadmap-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .roadmap-date {
+            font-weight: bold;
+            color: white;
+            min-width: 100px;
+        }
+
+        .bg-controls {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            width: 160px;
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            z-index: 100;
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s;
+        }
+
+        .bg-controls-header {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 12px 12px 0 0;
+            cursor: grab;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-align: center;
+            color: #9ca3af;
+            user-select: none;
+        }
+
+        .bg-controls-header:active {
+            cursor: grabbing;
+        }
+
+        .bg-controls-content {
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .bg-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .bg-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .bg-btn.active {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .control-group {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .control-label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-left: 0.25rem;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--accent-primary);
+            cursor: pointer;
+            margin-top: -4px;
+            box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div id="bgControls" class="bg-controls">
+    <div class="bg-controls-header" id="bgDragHandle">Background FX</div>
+    <div class="bg-controls-content">
+        <button class="bg-btn" onclick="switchBg('attractor')">Attractor</button>
+        <button class="bg-btn" onclick="switchBg('cosmic-quantum')">Cosmic</button>
+        <button class="bg-btn" onclick="switchBg('neural-nexus')">Neural</button>
+        <button class="bg-btn" onclick="switchBg('hyperspace')">Hyperspace</button>
+        <button class="bg-btn" onclick="switchBg('flow-field')">Flow Field</button>
+        
+        <div class="control-group">
+            <label class="control-label" for="bgOpacity">Intensity</label>
+            <input type="range" id="bgOpacity" min="0" max="1" step="0.05" value="0.35">
+        </div>
+    </div>
+</div>
+
+<div class="slides-container" id="slidesContainer">
+    <img src="assets/logo.svg" alt="Noma Protocol Logo" class="logo">
+    <div class="progress" id="progressBar"></div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active hero-slide">
+        <div class="content-wrapper">
+            <div class="tag">Live on Monad Testnet</div>
+            <h1>Noma Protocol</h1>
+            <p style="font-size: 1.5rem; color: #9ca3af;">The Next-Generation DeFi Launchpad</p>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                <div style="padding: 1rem 2rem; border-left: 2px solid var(--accent-primary); text-align: left;">
+                    <div style="color: white; font-weight: bold;">Fairness</div>
+                    <div style="font-size: 0.9rem;">Baked at protocol level</div>
+                </div>
+                <div style="padding: 1rem 2rem; border-left: 2px solid var(--accent-secondary); text-align: left;">
+                    <div style="color: white; font-weight: bold;">Liquidity</div>
+                    <div style="font-size: 0.9rem;">Programmatic & Automated</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2: Mission -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>Our Mission</h3>
+            <h2>Revolutionizing Token Launches</h2>
+            <p>The current status-quo of token launches is broken. Noma combines the efficiency of Uniswap V3 with an advanced DeFi protocol to solve the fundamental issues of distribution and trust.</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4 style="color:white; margin-top:0;">For Founders</h4>
+                    <p style="font-size: 1rem;">Automated tokenomics and fair distribution without the complexity.</p>
+                </div>
+                <div class="card">
+                    <h4 style="color:white; margin-top:0;">For Holders</h4>
+                    <p style="font-size: 1rem;">Transparency, safety, and guaranteed liquidity backing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3: Problem (Founders) -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>The Founder's Dilemma</h3>
+            <h2>Distribution is Hard</h2>
+            <div class="grid-2">
+                <div>
+                    <p>Launching a token today involves balancing fairness, transparency, and sustainable tokenomics. This complexity often leads to critical failures:</p>
+                    <ul>
+                        <li><strong>Rug Pulls:</strong> Insiders exit, leaving investors with worthless assets.</li>
+                        <li><strong>Liquidity Issues:</strong> Centralized control leads to manipulation.</li>
+                        <li><strong>Misaligned Incentives:</strong> Difficulty in aligning long-term goals with short-term pressure.</li>
+                    </ul>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="chart-placeholder">
+                        [Icon: Broken Balance Scale]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: Problem (Holders) -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>The Investor's Reality</h3>
+            <h2>Broken Expectations</h2>
+            <div class="grid-2">
+                <div style="order: 2;">
+                    <p>The crypto industry has become a "cut-throat" environment. Investors are often the product, not the partner.</p>
+                    <ul>
+                        <li><strong>Value Extraction:</strong> Projects designed to extract rather than create utility.</li>
+                        <li><strong>Lack of Trust:</strong> Exploitation leads to disillusionment.</li>
+                        <li><strong>Wealth Concentration:</strong> Insiders hold the majority of supply and power.</li>
+                    </ul>
+                </div>
+                <div style="order: 1; display: flex; align-items: center; justify-content: center;">
+                    <div class="chart-placeholder">
+                        [Icon: Warning Sign / Downward Trend]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5: Solution Overview -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>The Noma Solution</h3>
+            <h2>Automated Tokenomics</h2>
+            <p>Noma introduces a paradigm shift: Tokens that seed their own liquidity.</p>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <div class="highlight">Middleware Market Maker</div>
+                    <p>The protocol acts as the market maker for the liquidity it controls.</p>
+                </div>
+                <div class="card">
+                    <div class="highlight">Algorithmic Structure</div>
+                    <p>Liquidity is programmable and adjusts to market conditions automatically.</p>
+                </div>
+                <div class="card">
+                    <div class="highlight">Revenue Feedback</div>
+                    <p>Protocol revenue is fed back into liquidity, constantly increasing the floor price.</p>
+                </div>
+                <div class="card">
+                    <div class="highlight">Self-Sufficient</div>
+                    <p>No need for external market makers or complex liquidity management teams.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6: Deep Dive - Liquidity -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>Core Technology</h3>
+            <h2>1:1 Backing & Floor Price</h2>
+            <p>We don't just promise liquidity; we enforce it at the code level.</p>
+            
+            <div style="margin-top: 2rem;">
+                <div class="roadmap-item">
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);">GUARANTEE</div>
+                    <div>The protocol can buy back the <strong>whole circulating supply</strong> at any time.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);">BACKING</div>
+                    <div>Tokens outside protocol control are backed <strong>1:1</strong> by real liquidity at the floor price.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);">CONTROL</div>
+                    <div>Liquidity is owned by the <strong>protocol</strong>, not insiders.</div>
+                </div>
+            </div>
+            
+            <div class="chart-placeholder" style="height: 150px; margin-top: 2rem;">
+                [Visual: Price Floor Mechanism Graph]
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Innovative Features -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>Features</h3>
+            <h2>Beyond Just Launching</h2>
+            <div class="grid-2">
+                <div>
+                    <ul>
+                        <li>
+                            <strong style="color:white;">Configurable Liquidity Curve</strong>
+                            <br>Tailor the market structure to the project's specific needs.
+                        </li>
+                        <li>
+                            <strong style="color:white;">Liquidation-Free Loans</strong>
+                            <br>Borrow against assets without the fear of sudden liquidation cascades.
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul>
+                        <li>
+                            <strong style="color:white;">Native Staking</strong>
+                            <br>Integrated yield generation for long-term holders.
+                        </li>
+                        <li>
+                            <strong style="color:white;">Fair Revenue Sharing</strong>
+                            <br>Founders and protocol interests are aligned through transparent revenue splits.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8: Business Model -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>Sustainability</h3>
+            <h2>Economic Flywheel</h2>
+            <div class="grid-2">
+                <div class="card" style="text-align: center;">
+                    <div class="big-stat">Fees</div>
+                    <div class="stat-label">Generated from Trading</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Trading fees are collected by the protocol.</p>
+                </div>
+                <div class="card" style="text-align: center;">
+                    <div class="big-stat">Reinvest</div>
+                    <div class="stat-label">Into Liquidity</div>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Revenue is automatically routed to deepen liquidity.</p>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 2rem; font-style: italic;">"Revenue stream is fed back into the liquidity, which helps to increase the floor price of tokens over time."</p>
+        </div>
+    </div>
+
+    <!-- Slide 9: Roadmap -->
+    <div class="slide">
+        <div class="content-wrapper">
+            <h3>Trajectory</h3>
+            <h2>Roadmap & Status</h2>
+            
+            <div class="card" style="width: 100%; box-sizing: border-box;">
+                <div class="roadmap-item">
+                    <div class="roadmap-date" style="color: var(--accent-tertiary);">CURRENT</div>
+                    <div><strong>Live on Monad Testnet</strong><br>Core protocol operational, testing liquidity curves.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-date">Q2 2026</div>
+                    <div><strong>Mainnet Launch</strong><br>Full deployment, initial batch of partnered launches.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-date">Q3 2026</div>
+                    <div><strong>Ecosystem Expansion</strong><br>Cross-chain integrations and advanced DAO governance tools.</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-date">Q4 2026</div>
+                    <div><strong>Noma Pro</strong><br>Institutional grade tools for large scale asset issuance.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10: Contact -->
+    <div class="slide">
+        <div class="content-wrapper" style="text-align: center;">
+            <h3>Join Us</h3>
+            <h2>The Future of Fair Launches</h2>
+            <p>Ready to build the next generation of DeFi?</p>
+            
+            <div style="margin-top: 3rem;">
+                <a href="#" style="text-decoration: none;">
+                    <button style="background: var(--accent-primary); border: none; padding: 1rem 3rem; font-size: 1.2rem; font-weight: bold;">Launch App</button>
+                </a>
+                <br><br>
+                <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem;">
+                    <span style="color: #9ca3af;">Twitter: @NomaProtocol</span>
+                    <span style="color: #9ca3af;">Discord: Noma Community</span>
+                    <span style="color: #9ca3af;">Web: noma.fi</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <span id="slideCounter" style="margin-right: 1rem; color: #6b7280;">1 / 10</span>
+        <button onclick="prevSlide()" id="prevBtn">Previous</button>
+        <button onclick="nextSlide()" id="nextBtn">Next</button>
+    </div>
+
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const progressBar = document.getElementById('progressBar');
+    const slideCounter = document.getElementById('slideCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateSlide() {
+        slides.forEach((slide, index) => {
+            if (index === currentSlide) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+        
+        const progress = ((currentSlide + 1) / slides.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    function nextSlide() {
+        if (currentSlide < slides.length - 1) {
+            currentSlide++;
+            updateSlide();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateSlide();
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Space') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+        }
+    });
+
+    updateSlide();
+</script>
+
+<script src="background-effects.js"></script>
+<script>
+    // Initialize background
+    // You can pass 'attractor', 'convolution', or leave empty for random
+    document.addEventListener('DOMContentLoaded', () => {
+        initBackground('bgCanvas');
+        
+        // Initialize slider listener
+        const opacitySlider = document.getElementById('bgOpacity');
+        const canvas = document.getElementById('bgCanvas');
+        
+        opacitySlider.addEventListener('input', (e) => {
+            canvas.style.opacity = e.target.value;
+        });
+    });
+
+    // Switch Background Wrapper
+    function switchBg(type) {
+        switchBackground(type);
+        // Update active state UI
+        document.querySelectorAll('.bg-btn').forEach(btn => {
+            if (btn.textContent.toLowerCase().includes(type.split('-')[0])) {
+                btn.style.borderColor = 'var(--accent-primary)';
+                btn.style.color = 'var(--accent-primary)';
+            } else {
+                btn.style.borderColor = 'transparent';
+                btn.style.color = '#e0e0e0';
+            }
+        });
+    }
+
+    // Draggable Logic
+    const dragElement = document.getElementById("bgControls");
+    const dragHandle = document.getElementById("bgDragHandle");
+    
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
+
+    dragHandle.addEventListener("mousedown", dragStart);
+    document.addEventListener("mouseup", dragEnd);
+    document.addEventListener("mousemove", drag);
+
+    function dragStart(e) {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+        if (e.target === dragHandle) {
+            isDragging = true;
+        }
+    }
+
+    function dragEnd(e) {
+        initialX = currentX;
+        initialY = currentY;
+        isDragging = false;
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            e.preventDefault();
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+            xOffset = currentX;
+            yOffset = currentY;
+            setTranslate(currentX, currentY, dragElement);
+        }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+        el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
+    }
+</script>
+
+</body>
+</html>
