@@ -332,23 +332,22 @@
             transition: opacity 0.3s;
         }
 
-        .lang-selector {
-            position: left;
-            top: 2rem;
-            right: 14rem; /* Reverted to original position (left of bg-controls) */
-            left: auto; /* Ensure it respects right */
-            width: auto; /* Allow width to adjust */
-            /* background: rgba(22, 27, 34, 0.8); */
-            backdrop-filter: blur(12px);
-            /* border: 1px solid var(--border-color); */
-            border-radius: 12px;
-            z-index: 100;
-            flex-direction: column; /* Stack header and content */
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            display: flex; /* Make it a flex container */
-        }
-        
+                .lang-selector {
+                    position: fixed;
+                    top: 2rem;
+                    right: 14rem; /* Reverted to original position (left of bg-controls) */
+                    left: auto; /* Ensure it respects right */
+                    width: auto; /* Allow width to adjust */
+                    background: rgba(22, 27, 34, 0.8);
+                    backdrop-filter: blur(12px);
+                    border: 1px solid var(--border-color);
+                    border-radius: 12px;
+                    z-index: 100;
+                    flex-direction: column; /* Stack header and content */
+                    overflow: hidden;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    display: flex; /* Make it a flex container */
+                }        
         .bg-controls.collapsed .bg-controls-content {
             display: none;
         }
@@ -547,14 +546,7 @@
                 z-index: 20;
             }
 
-            @media (max-width: 380px) {
-                .controls {
-                    margin-bottom: 20px;
-                }
-            }
-
-            /* Force BG controls to look collapsed initially or simplified */
-            .bg-controls-header {
+                        /* Force BG controls to look collapsed initially or simplified */            .bg-controls-header {
                 padding: 0.5rem;
                 justify-content: center;
             }
