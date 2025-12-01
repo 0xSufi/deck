@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import selfRepayingGif from '../assets/self-repaying.gif';
+import selfRepayingGif from '../assets/self-repaying-low.gif';
 import dividendsGif from '../assets/dividends.gif';
 
 const gifs = {
