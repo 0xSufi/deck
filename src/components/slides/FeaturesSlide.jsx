@@ -31,7 +31,6 @@ export default function FeaturesSlide({ isActive }) {
                             <li>
                                 <strong style={{ color: 'white' }}>
                                     <EditableText textKey="features_list_3_title" as="span" />
-                                    <InfoIcon type="dividends" />
                                 </strong>
                                 <br/><EditableText textKey="features_list_3_text" as="span" />
                             </li>
