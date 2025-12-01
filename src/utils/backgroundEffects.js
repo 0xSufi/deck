@@ -519,7 +519,8 @@ class ConvolutionBackground {
             "hyperspace",
             "flow-field",
             "fourier-spiral",
-            "aurora-borealis"
+            "aurora-borealis",
+            "cosmic-gas"
         ];
 
         this.type = this.types[Math.floor(Math.random() * this.types.length)];
@@ -629,6 +630,7 @@ class ConvolutionBackground {
             case "flow-field": this.setupFlow(); break;
             case "fourier-spiral": this.setupFourier(); break;
             case "aurora-borealis": this.setupAurora(); break;
+            case "cosmic-gas": this.setupCosmicGas(); break;
             default: this.setupCosmicQuantum();
         }
 
@@ -993,6 +995,78 @@ class ConvolutionBackground {
         };
     }
 
+    setupCosmicGas() {
+        const noise2d = createNoise2D();
+        const particleCount = 3000; // High density
+        
+        this.particles = [];
+        for(let i=0; i<particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                vx: 0, vy: 0,
+                life: Math.random(), // For alpha pulsing
+                size: Math.random() * 2,
+                colorHue: randomInRange(200, 320) // Blue to Pink/Purple range
+            });
+        }
+
+        this.animate = () => {
+            this.time += 0.002;
+            
+            // Fade trail effect
+            this.ctx.fillStyle = 'rgba(5, 5, 10, 0.05)'; 
+            this.ctx.fillRect(0, 0, this.width, this.height);
+            
+            this.ctx.globalCompositeOperation = 'screen'; // Additive blending
+
+            this.particles.forEach(p => {
+                // Fluid motion using noise
+                const n = noise2d(p.x * 0.002, p.y * 0.002 + this.time);
+                const angle = n * Math.PI * 4;
+                
+                p.vx += Math.cos(angle) * 0.05;
+                p.vy += Math.sin(angle) * 0.05;
+                
+                // Friction
+                p.vx *= 0.96;
+                p.vy *= 0.96;
+                
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Wrap around screen
+                if(p.x < 0) p.x = this.width;
+                if(p.x > this.width) p.x = 0;
+                if(p.y < 0) p.y = this.height;
+                if(p.y > this.height) p.y = 0;
+
+                p.life += 0.01;
+                
+                // Draw gas particle
+                const alpha = (Math.sin(p.life) + 1) / 2 * 0.5;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+                this.ctx.fillStyle = `hsla(${p.colorHue}, 70%, 60%, ${alpha})`;
+                this.ctx.fill();
+            });
+            
+            // Add a second pass of larger "cloud" blobs for volume
+            this.ctx.filter = 'blur(20px)';
+            for(let i=0; i<5; i++) {
+                const cx = (this.width/2) + Math.cos(this.time + i) * 200;
+                const cy = (this.height/2) + Math.sin(this.time * 0.5 + i) * 150;
+                this.ctx.beginPath();
+                this.ctx.arc(cx, cy, 100 + Math.sin(this.time * 2 + i)*50, 0, Math.PI*2);
+                this.ctx.fillStyle = `hsla(${240 + i*20}, 60%, 40%, 0.05)`;
+                this.ctx.fill();
+            }
+            this.ctx.filter = 'none';
+
+            this.ctx.globalCompositeOperation = 'source-over';
+        };
+    }
+
     setupFourier() { this.setupFlow(); }
 
     start() {
@@ -1031,7 +1105,7 @@ export function initBackground(canvas, activeType) {
         instance = new AttractorBackground(canvas);
     } else {
         instance = new ConvolutionBackground(canvas);
-        const convTypes = ["cosmic-quantum", "neural-nexus", "hyperspace", "flow-field", "fourier-spiral", "aurora-borealis"];
+        const convTypes = ["cosmic-quantum", "neural-nexus", "hyperspace", "flow-field", "fourier-spiral", "aurora-borealis", "cosmic-gas"];
         if (convTypes.includes(type)) {
             instance.type = type;
             instance.init();

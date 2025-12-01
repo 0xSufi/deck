@@ -32,6 +32,7 @@ export default function BackgroundControls({ onSwitchBg, onOpacityChange }) {
         { id: 'hyperspace', label: 'Hyperspace' },
         { id: 'flow-field', label: 'Flow Field' },
         { id: 'aurora-borealis', label: 'Aurora' },
+        { id: 'cosmic-gas', label: 'Cosmic Gas' },
     ];
 
     return (
