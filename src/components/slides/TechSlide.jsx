@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import EditableText from '../EditableText';
 
 export default function TechSlide({ isActive }) {
     const { t, tHtml } = useLanguage();
@@ -6,22 +7,22 @@ export default function TechSlide({ isActive }) {
     return (
         <div className={`slide ${isActive ? 'active' : ''}`}>
             <div className="content-wrapper">
-                <h3>{t('tech_eyebrow')}</h3>
-                <h2>{t('tech_title')}</h2>
-                <p>{t('tech_text')}</p>
+                <EditableText textKey="tech_eyebrow" as="h3" />
+                <EditableText textKey="tech_title" as="h2" />
+                <EditableText textKey="tech_text" as="p" />
 
                 <div style={{ marginTop: '2rem' }}>
                     <div className="roadmap-item">
-                        <div className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }}>{t('tech_item_1_date')}</div>
-                        <div dangerouslySetInnerHTML={tHtml('tech_item_1_text')} />
+                        <EditableText textKey="tech_item_1_date" as="div" className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }} />
+                        <EditableText textKey="tech_item_1_text" as="div" html />
                     </div>
                     <div className="roadmap-item">
-                        <div className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }}>{t('tech_item_2_date')}</div>
-                        <div dangerouslySetInnerHTML={tHtml('tech_item_2_text')} />
+                        <EditableText textKey="tech_item_2_date" as="div" className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }} />
+                        <EditableText textKey="tech_item_2_text" as="div" html />
                     </div>
                     <div className="roadmap-item">
-                        <div className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }}>{t('tech_item_3_date')}</div>
-                        <div dangerouslySetInnerHTML={tHtml('tech_item_3_text')} />
+                        <EditableText textKey="tech_item_3_date" as="div" className="roadmap-date" style={{ color: 'var(--accent-tertiary)' }} />
+                        <EditableText textKey="tech_item_3_text" as="div" html />
                     </div>
                 </div>
 

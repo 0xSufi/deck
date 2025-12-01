@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import EditableText from '../EditableText';
 
 export default function CreatorsSlide({ isActive }) {
     const { t } = useLanguage();
@@ -6,15 +7,15 @@ export default function CreatorsSlide({ isActive }) {
     return (
         <div className={`slide ${isActive ? 'active' : ''}`}>
             <div className="content-wrapper">
-                <h3>{t('creators_eyebrow')}</h3>
-                <h2>{t('creators_title')}</h2>
-                <p>{t('creators_text')}</p>
+                <EditableText textKey="creators_eyebrow" as="h3" />
+                <EditableText textKey="creators_title" as="h2" />
+                <EditableText textKey="creators_text" as="p" />
 
                 <div className="grid-2">
                     <div>
                         <div className="card" style={{ height: '100%', boxSizing: 'border-box' }}>
-                            <div className="highlight">{t('creators_card_title')}</div>
-                            <p style={{ marginTop: '1rem' }}>{t('creators_card_text')}</p>
+                            <div className="highlight"><EditableText textKey="creators_card_title" as="span" /></div>
+                            <EditableText textKey="creators_card_text" as="p" style={{ marginTop: '1rem' }} />
                         </div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '1rem' }}>
@@ -51,8 +52,8 @@ export default function CreatorsSlide({ isActive }) {
                             </svg>
                         </div>
                         <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--accent-tertiary)' }}>
-                            <strong>{t('creators_footer_title')}</strong><br/>
-                            <span style={{ color: '#9ca3af' }}>{t('creators_footer_text')}</span>
+                            <strong><EditableText textKey="creators_footer_title" as="span" /></strong><br/>
+                            <EditableText textKey="creators_footer_text" as="span" style={{ color: '#9ca3af' }} />
                         </div>
                     </div>
                 </div>

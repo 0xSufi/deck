@@ -4,6 +4,7 @@ import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import BackgroundCanvas from './components/BackgroundCanvas';
 import BackgroundControls from './components/BackgroundControls';
 import LanguageSelector from './components/LanguageSelector';
+import EditModeToggle from './components/EditModeToggle';
 import HeroSlide from './components/slides/HeroSlide';
 import MissionSlide from './components/slides/MissionSlide';
 import ProblemFoundersSlide from './components/slides/ProblemFoundersSlide';
@@ -12,7 +13,9 @@ import SolutionSlide from './components/slides/SolutionSlide';
 import TechSlide from './components/slides/TechSlide';
 import FeaturesSlide from './components/slides/FeaturesSlide';
 import CreatorsSlide from './components/slides/CreatorsSlide';
+import LaunchpadSlide from './components/slides/LaunchpadSlide';
 import BusinessSlide from './components/slides/BusinessSlide';
+import NomaTokenSlide from './components/slides/NomaTokenSlide';
 import HoldersSlide from './components/slides/HoldersSlide';
 import RoadmapSlide from './components/slides/RoadmapSlide';
 import ContactSlide from './components/slides/ContactSlide';
@@ -27,7 +30,9 @@ const slides = [
     TechSlide,
     FeaturesSlide,
     CreatorsSlide,
+    LaunchpadSlide,
     BusinessSlide,
+    NomaTokenSlide,
     HoldersSlide,
     RoadmapSlide,
     ContactSlide,
@@ -67,6 +72,14 @@ function PitchDeck() {
     // Keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e) => {
+            // Don't trigger navigation when user is typing in an input or textarea
+            const activeElement = document.activeElement;
+            const isEditing = activeElement?.tagName === 'INPUT' ||
+                              activeElement?.tagName === 'TEXTAREA' ||
+                              activeElement?.isContentEditable;
+
+            if (isEditing) return;
+
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 e.preventDefault();
                 nextSlide();
@@ -83,6 +96,7 @@ function PitchDeck() {
     return (
         <>
             <BackgroundCanvas ref={bgCanvasRef} opacity={bgOpacity} />
+            <EditModeToggle />
             <LanguageSelector />
             <BackgroundControls
                 onSwitchBg={handleSwitchBg}

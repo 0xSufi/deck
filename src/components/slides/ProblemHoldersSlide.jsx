@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import EditableText from '../EditableText';
 
 export default function ProblemHoldersSlide({ isActive }) {
     const { t } = useLanguage();
@@ -6,15 +7,15 @@ export default function ProblemHoldersSlide({ isActive }) {
     return (
         <div className={`slide ${isActive ? 'active' : ''}`}>
             <div className="content-wrapper">
-                <h3>{t('problem_holders_eyebrow')}</h3>
-                <h2>{t('problem_holders_title')}</h2>
+                <EditableText textKey="problem_holders_eyebrow" as="h3" />
+                <EditableText textKey="problem_holders_title" as="h2" />
                 <div className="grid-2">
                     <div style={{ order: 2 }}>
-                        <p>{t('problem_holders_text')}</p>
+                        <EditableText textKey="problem_holders_text" as="p" />
                         <ul>
-                            <li><strong>{t('problem_holders_list_1_title')}</strong> <span>{t('problem_holders_list_1_text')}</span></li>
-                            <li><strong>{t('problem_holders_list_2_title')}</strong> <span>{t('problem_holders_list_2_text')}</span></li>
-                            <li><strong>{t('problem_holders_list_3_title')}</strong> <span>{t('problem_holders_list_3_text')}</span></li>
+                            <li><EditableText textKey="problem_holders_list_1_title" as="strong" /> <EditableText textKey="problem_holders_list_1_text" as="span" /></li>
+                            <li><EditableText textKey="problem_holders_list_2_title" as="strong" /> <EditableText textKey="problem_holders_list_2_text" as="span" /></li>
+                            <li><EditableText textKey="problem_holders_list_3_title" as="strong" /> <EditableText textKey="problem_holders_list_3_text" as="span" /></li>
                         </ul>
                     </div>
                     <div style={{ order: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import EditableText from '../EditableText';
 
 export default function HoldersSlide({ isActive }) {
     const { t } = useLanguage();
@@ -6,18 +7,18 @@ export default function HoldersSlide({ isActive }) {
     return (
         <div className={`slide ${isActive ? 'active' : ''}`}>
             <div className="content-wrapper">
-                <h3>{t('holders_eyebrow')}</h3>
-                <h2>{t('holders_title')}</h2>
-                <p>{t('holders_text')}</p>
+                <EditableText textKey="holders_eyebrow" as="h3" />
+                <EditableText textKey="holders_title" as="h2" />
+                <EditableText textKey="holders_text" as="p" />
 
                 <div className="grid-2">
                     <div>
                         <div className="card" style={{ height: '100%', boxSizing: 'border-box' }}>
-                            <div className="highlight">{t('holders_card_title')}</div>
-                            <p style={{ marginTop: '1rem' }}>{t('holders_card_text')}</p>
+                            <div className="highlight"><EditableText textKey="holders_card_title" as="span" /></div>
+                            <EditableText textKey="holders_card_text" as="p" style={{ marginTop: '1rem' }} />
                             <ul style={{ marginTop: '1.5rem' }}>
-                                <li><strong>{t('holders_list_1_title')}</strong> <span>{t('holders_list_1_text')}</span></li>
-                                <li><strong>{t('holders_list_2_title')}</strong> <span>{t('holders_list_2_text')}</span></li>
+                                <li><EditableText textKey="holders_list_1_title" as="strong" /> <EditableText textKey="holders_list_1_text" as="span" /></li>
+                                <li><EditableText textKey="holders_list_2_title" as="strong" /> <EditableText textKey="holders_list_2_text" as="span" /></li>
                             </ul>
                         </div>
                     </div>
@@ -55,8 +56,8 @@ export default function HoldersSlide({ isActive }) {
                             </svg>
                         </div>
                         <div style={{ textAlign: 'center', fontSize: '0.9rem', color: 'var(--accent-tertiary)' }}>
-                            <strong>{t('holders_graphic_footer_title')}</strong><br/>
-                            <span style={{ color: '#9ca3af' }}>{t('holders_graphic_footer_text')}</span>
+                            <strong><EditableText textKey="holders_graphic_footer_title" as="span" /></strong><br/>
+                            <EditableText textKey="holders_graphic_footer_text" as="span" style={{ color: '#9ca3af' }} />
                         </div>
                     </div>
                 </div>

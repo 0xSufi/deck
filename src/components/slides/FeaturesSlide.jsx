@@ -1,4 +1,5 @@
 import { useLanguage } from '../../context/LanguageContext';
+import EditableText from '../EditableText';
 import InfoIcon from '../InfoIcon';
 
 export default function FeaturesSlide({ isActive }) {
@@ -7,21 +8,21 @@ export default function FeaturesSlide({ isActive }) {
     return (
         <div className={`slide ${isActive ? 'active' : ''}`}>
             <div className="content-wrapper">
-                <h3>{t('features_eyebrow')}</h3>
-                <h2>{t('features_title')}</h2>
+                <EditableText textKey="features_eyebrow" as="h3" />
+                <EditableText textKey="features_title" as="h2" />
                 <div className="grid-2">
                     <div>
                         <ul>
                             <li>
-                                <strong style={{ color: 'white' }}>{t('features_list_1_title')}</strong>
-                                <br/><span>{t('features_list_1_text')}</span>
+                                <strong style={{ color: 'white' }}><EditableText textKey="features_list_1_title" as="span" /></strong>
+                                <br/><EditableText textKey="features_list_1_text" as="span" />
                             </li>
                             <li>
                                 <strong style={{ color: 'white' }}>
-                                    {t('features_list_2_title')}
+                                    <EditableText textKey="features_list_2_title" as="span" />
                                     <InfoIcon type="self-repaying" />
                                 </strong>
-                                <br/><span>{t('features_list_2_text')}</span>
+                                <br/><EditableText textKey="features_list_2_text" as="span" />
                             </li>
                         </ul>
                     </div>
@@ -29,14 +30,14 @@ export default function FeaturesSlide({ isActive }) {
                         <ul>
                             <li>
                                 <strong style={{ color: 'white' }}>
-                                    {t('features_list_3_title')}
+                                    <EditableText textKey="features_list_3_title" as="span" />
                                     <InfoIcon type="dividends" />
                                 </strong>
-                                <br/><span>{t('features_list_3_text')}</span>
+                                <br/><EditableText textKey="features_list_3_text" as="span" />
                             </li>
                             <li>
-                                <strong style={{ color: 'white' }}>{t('features_list_4_title')}</strong>
-                                <br/><span>{t('features_list_4_text')}</span>
+                                <strong style={{ color: 'white' }}><EditableText textKey="features_list_4_title" as="span" /></strong>
+                                <br/><EditableText textKey="features_list_4_text" as="span" />
                             </li>
                         </ul>
                     </div>
