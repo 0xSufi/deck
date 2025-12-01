@@ -918,14 +918,14 @@ class ConvolutionBackground {
     setupAurora() {
         const noise2d = createNoise2D();
         const layers = [
-            { color: '#4ade80', speed: 0.002, scale: 0.001, offset: 0, yOffset: 0.2 },  // Green
-            { color: '#818cf8', speed: 0.003, scale: 0.0015, offset: 100, yOffset: 0.3 }, // Indigo
-            { color: '#e879f9', speed: 0.001, scale: 0.002, offset: 200, yOffset: 0.4 }, // Purple
-            { color: '#22d3ee', speed: 0.0025, scale: 0.001, offset: 300, yOffset: 0.25 } // Cyan
+            { color: '#4ade80', speed: 0.003, scale: 0.002, offset: 0, yOffset: 0.25 },  // Green
+            { color: '#818cf8', speed: 0.004, scale: 0.0025, offset: 100, yOffset: 0.35 }, // Indigo
+            { color: '#e879f9', speed: 0.002, scale: 0.003, offset: 200, yOffset: 0.45 }, // Purple
+            { color: '#22d3ee', speed: 0.0035, scale: 0.002, offset: 300, yOffset: 0.3 } // Cyan
         ];
 
         this.animate = () => {
-            this.time += 1;
+            this.time += 2; // Faster time step
             this.ctx.clearRect(0, 0, this.width, this.height);
             
             // Dark background
@@ -933,24 +933,28 @@ class ConvolutionBackground {
             this.ctx.fillRect(0, 0, this.width, this.height);
             
             this.ctx.globalCompositeOperation = 'screen';
-            this.ctx.filter = 'blur(30px)';
+            this.ctx.filter = 'blur(40px)'; // Increased blur for ethereal look
 
             layers.forEach(layer => {
                 this.ctx.beginPath();
+                const pulse = (Math.sin(this.time * 0.01 + layer.offset) + 1) / 2; // 0 to 1
+                const alpha = 0.4 + pulse * 0.2; // Pulse alpha between 0.4 and 0.6
+
                 const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
                 gradient.addColorStop(0, 'rgba(0,0,0,0)');
-                gradient.addColorStop(0.2, layer.color + '00'); // Transparent
-                gradient.addColorStop(0.5, layer.color + '88'); // Semi-transparent
+                gradient.addColorStop(0.2, layer.color + '00'); 
+                gradient.addColorStop(0.5, layer.color + Math.floor(alpha * 255).toString(16).padStart(2, '0')); 
                 gradient.addColorStop(1, 'rgba(0,0,0,0)');
                 
                 this.ctx.fillStyle = gradient;
                 
                 let started = false;
                 
-                // Draw top curve
-                for (let x = 0; x <= this.width; x += 20) {
-                    const n = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
-                    const y = this.height * layer.yOffset + n * 200;
+                // Draw top curve with dual-layer noise for complexity
+                for (let x = 0; x <= this.width; x += 15) {
+                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
+                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 2 + layer.offset); // Detail noise
+                    const y = this.height * layer.yOffset + (n1 * 200 + n2 * 50);
                     
                     if (!started) {
                         this.ctx.moveTo(x, y);
@@ -960,10 +964,11 @@ class ConvolutionBackground {
                     }
                 }
                 
-                // Draw bottom to close shape (making a band)
-                for (let x = this.width; x >= 0; x -= 20) {
-                    const n = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 10); // Different noise for width variation
-                    const y = this.height * (layer.yOffset + 0.4) + n * 200;
+                // Draw bottom
+                for (let x = this.width; x >= 0; x -= 15) {
+                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 10);
+                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 2 + layer.offset + 10);
+                    const y = this.height * (layer.yOffset + 0.3) + (n1 * 200 + n2 * 50);
                     this.ctx.lineTo(x, y);
                 }
                 
