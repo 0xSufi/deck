@@ -918,14 +918,14 @@ class ConvolutionBackground {
     setupAurora() {
         const noise2d = createNoise2D();
         const layers = [
-            { color: '#4ade80', speed: 0.003, scale: 0.002, offset: 0, yOffset: 0.25 },  // Green
-            { color: '#818cf8', speed: 0.004, scale: 0.0025, offset: 100, yOffset: 0.35 }, // Indigo
-            { color: '#e879f9', speed: 0.002, scale: 0.003, offset: 200, yOffset: 0.45 }, // Purple
-            { color: '#22d3ee', speed: 0.0035, scale: 0.002, offset: 300, yOffset: 0.3 } // Cyan
+            { color: '#4ade80', speed: 0.015, scale: 0.003, offset: 0, yOffset: 0.25 },  // Green
+            { color: '#818cf8', speed: 0.02, scale: 0.004, offset: 100, yOffset: 0.35 }, // Indigo
+            { color: '#e879f9', speed: 0.01, scale: 0.005, offset: 200, yOffset: 0.45 }, // Purple
+            { color: '#22d3ee', speed: 0.018, scale: 0.003, offset: 300, yOffset: 0.3 } // Cyan
         ];
 
         this.animate = () => {
-            this.time += 2; // Faster time step
+            this.time += 0.5; // Consistent time step
             this.ctx.clearRect(0, 0, this.width, this.height);
             
             // Dark background
@@ -933,12 +933,13 @@ class ConvolutionBackground {
             this.ctx.fillRect(0, 0, this.width, this.height);
             
             this.ctx.globalCompositeOperation = 'screen';
-            this.ctx.filter = 'blur(40px)'; // Increased blur for ethereal look
+            this.ctx.filter = 'blur(35px)';
 
             layers.forEach(layer => {
                 this.ctx.beginPath();
-                const pulse = (Math.sin(this.time * 0.01 + layer.offset) + 1) / 2; // 0 to 1
-                const alpha = 0.4 + pulse * 0.2; // Pulse alpha between 0.4 and 0.6
+                // Faster pulse
+                const pulse = (Math.sin(this.time * 0.05 + layer.offset) + 1) / 2; 
+                const alpha = 0.5 + pulse * 0.3; // Pulse alpha between 0.5 and 0.8
 
                 const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
                 gradient.addColorStop(0, 'rgba(0,0,0,0)');
@@ -950,11 +951,11 @@ class ConvolutionBackground {
                 
                 let started = false;
                 
-                // Draw top curve with dual-layer noise for complexity
+                // Draw top curve with higher amplitude
                 for (let x = 0; x <= this.width; x += 15) {
                     const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
-                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 2 + layer.offset); // Detail noise
-                    const y = this.height * layer.yOffset + (n1 * 200 + n2 * 50);
+                    const n2 = noise2d(x * layer.scale * 2.5, this.time * layer.speed * 2 + layer.offset); // Detail noise
+                    const y = this.height * layer.yOffset + (n1 * 300 + n2 * 100);
                     
                     if (!started) {
                         this.ctx.moveTo(x, y);
@@ -967,8 +968,8 @@ class ConvolutionBackground {
                 // Draw bottom
                 for (let x = this.width; x >= 0; x -= 15) {
                     const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 10);
-                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 2 + layer.offset + 10);
-                    const y = this.height * (layer.yOffset + 0.3) + (n1 * 200 + n2 * 50);
+                    const n2 = noise2d(x * layer.scale * 2.5, this.time * layer.speed * 2 + layer.offset + 10);
+                    const y = this.height * (layer.yOffset + 0.3) + (n1 * 300 + n2 * 100);
                     this.ctx.lineTo(x, y);
                 }
                 
