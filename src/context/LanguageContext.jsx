@@ -1,10 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 
-// Get all translation keys for reference
-const getTranslationKeys = (translations) => {
-    return Object.keys(translations.en);
-};
-
 const translations = {
     en: {
         hero_tag: "Live on Monad Mainnet",
@@ -22,6 +17,16 @@ const translations = {
         mission_card_founders_text: "Bootstrap entirely trust-less and decentralized tokens with customizable liquidity and elastic supply.",
         mission_card_holders_title: "New Asset Class",
         mission_card_holders_text: "Tokens with advanced DeFi functionalities like self-repaying loans and native leverage.",
+
+        market_eyebrow: "Market Analysis",
+        market_title: "The Launchpad Industry",
+        market_text: "The sector has evolved from VC-dominated IDOs to permissionless platforms like pump.fun. Pump.fun leads Solana with ~$715M revenue and 70–95% market share.",
+        market_curve_title: "The Bonding Curve",
+        market_curve_text: "A deterministic price function where early buyers pay less. Noma's 'shift' signals the anchor was depleted and liquidity is healthy, similar to 'graduation'.",
+        market_revenue_title: "Creator Revenue Sharing",
+        market_revenue_text: "Since May 2025, Pump.fun shares revenue. Post-graduation, creators receive 50% of the platform's share (0.025% of total volume).",
+        market_stats_title: "Market Dominance",
+        market_stats_text: "Pump.fun captures >$35M monthly revenue, validating the demand for fair, permissionless launch mechanisms.",
 
         problem_founders_eyebrow: "The Challenge",
         problem_founders_title: "The Status Quo",
@@ -173,6 +178,16 @@ const translations = {
         mission_card_founders_text: "Lanza tokens totalmente descentralizados y sin confianza con liquidez personalizable y oferta elástica.",
         mission_card_holders_title: "Nueva Clase de Activo",
         mission_card_holders_text: "Tokens con funcionalidades DeFi avanzadas como préstamos auto-pagables y apalancamiento nativo.",
+
+        market_eyebrow: "Análisis de Mercado",
+        market_title: "La Industria de Launchpad",
+        market_text: "El sector ha evolucionado de IDOs dominados por VC a plataformas sin permiso como pump.fun. Pump.fun lidera Solana con ~$715M en ingresos y 70-95% de cuota de mercado.",
+        market_curve_title: "La Curva de Vinculación",
+        market_curve_text: "Función de precio determinista donde los primeros compradores pagan menos. El 'shift' de Noma señala liquidez saludable, similar a la 'graduación'.",
+        market_revenue_title: "Ingresos para Creadores",
+        market_revenue_text: "Desde mayo de 2025, Pump.fun comparte ingresos. Post-graduación, los creadores reciben el 50% de la cuota de la plataforma (0.025% del volumen total).",
+        market_stats_title: "Dominio del Mercado",
+        market_stats_text: "Pump.fun captura >$35M en ingresos mensuales, validando la demanda de mecanismos de lanzamiento justos.",
 
         problem_founders_eyebrow: "El Desafío",
         problem_founders_title: "El Status Quo",

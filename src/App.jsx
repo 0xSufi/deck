@@ -7,6 +7,7 @@ import LanguageSelector from './components/LanguageSelector';
 import EditModeToggle from './components/EditModeToggle';
 import HeroSlide from './components/slides/HeroSlide';
 import MissionSlide from './components/slides/MissionSlide';
+import MarketSlide from './components/slides/MarketSlide';
 import ProblemFoundersSlide from './components/slides/ProblemFoundersSlide';
 import ProblemHoldersSlide from './components/slides/ProblemHoldersSlide';
 import SolutionSlide from './components/slides/SolutionSlide';
@@ -24,6 +25,7 @@ import './App.css';
 const slides = [
     HeroSlide,
     MissionSlide,
+    MarketSlide,
     ProblemFoundersSlide,
     ProblemHoldersSlide,
     SolutionSlide,
