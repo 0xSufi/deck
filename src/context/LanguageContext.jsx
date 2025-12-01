@@ -325,7 +325,7 @@ const translations = {
     }
 };
 
-const STORAGE_KEY = 'pitch-deck-content-overrides';
+const STORAGE_KEY = 'pitch-deck-content-overrides-v2';
 
 const LanguageContext = createContext();
 

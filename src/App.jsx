@@ -33,9 +33,9 @@ const slides = [
     FeaturesSlide,
     CreatorsSlide,
     LaunchpadSlide,
+    HoldersSlide,
     BusinessSlide,
     NomaTokenSlide,
-    HoldersSlide,
     RoadmapSlide,
     ContactSlide,
 ];
