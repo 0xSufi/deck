@@ -917,37 +917,36 @@ class ConvolutionBackground {
 
     setupAurora() {
         const noise2d = createNoise2D();
-        // Richer palette with hue ranges for shifting colors
         const layers = [
-            { baseHue: 160, range: 30, speed: 0.005, scale: 0.002, offset: 0, yOffset: 0.3 },   // Teal/Green
-            { baseHue: 270, range: 40, speed: 0.008, scale: 0.003, offset: 100, yOffset: 0.4 }, // Purple
-            { baseHue: 320, range: 30, speed: 0.006, scale: 0.004, offset: 200, yOffset: 0.5 }, // Pink
-            { baseHue: 200, range: 40, speed: 0.01, scale: 0.0025, offset: 300, yOffset: 0.35 }, // Blue
-            { baseHue: 120, range: 40, speed: 0.007, scale: 0.0035, offset: 400, yOffset: 0.45 }, // Green
-            { baseHue: 240, range: 50, speed: 0.009, scale: 0.003, offset: 500, yOffset: 0.55 }  // Deep Blue/Violet
+            { baseHue: 160, range: 30, speed: 0.03, scale: 0.004, offset: 0, yOffset: 0.3, driftFactor: 0.0005 },   // Teal/Green
+            { baseHue: 270, range: 40, speed: 0.04, scale: 0.005, offset: 100, yOffset: 0.4, driftFactor: 0.0007 }, // Purple
+            { baseHue: 320, range: 30, speed: 0.025, scale: 0.006, offset: 200, yOffset: 0.5, driftFactor: 0.0004 }, // Pink
+            { baseHue: 200, range: 40, speed: 0.045, scale: 0.0045, offset: 300, yOffset: 0.35, driftFactor: 0.0008 }, // Blue
+            { baseHue: 120, range: 40, speed: 0.035, scale: 0.0055, offset: 400, yOffset: 0.45, driftFactor: 0.0006 }, // Green
+            { baseHue: 240, range: 50, speed: 0.042, scale: 0.005, offset: 500, yOffset: 0.55, driftFactor: 0.0009 }  // Deep Blue/Violet
         ];
 
+        let xDrift = 0; // Cumulative horizontal drift
+
         this.animate = () => {
-            this.time += 0.5; 
+            this.time += 1.5; // Faster global time increment
+            xDrift += 0.5; // Constant horizontal drift amount per frame (adjust for speed)
+
             this.ctx.clearRect(0, 0, this.width, this.height);
-            
-            // Deep cosmic background
-            this.ctx.fillStyle = '#020617'; 
+            this.ctx.fillStyle = '#020617';
             this.ctx.fillRect(0, 0, this.width, this.height);
             
-            this.ctx.globalCompositeOperation = 'screen'; // Additive blending for light mixing
-            this.ctx.filter = 'blur(50px)'; // Heavy blur for gaseous effect
+            this.ctx.globalCompositeOperation = 'screen';
+            this.ctx.filter = 'blur(10px)'; // Significantly reduced blur
 
             layers.forEach((layer, i) => {
                 this.ctx.beginPath();
                 
-                // Dynamic color shifting over time
-                const hue = layer.baseHue + Math.sin(this.time * 0.005 + i) * layer.range;
+                const hue = layer.baseHue + Math.sin(this.time * 0.008 + i) * layer.range; // Increased hue shift frequency
                 const color = `hsla(${hue}, 85%, 60%,`; 
                 
-                // Breathing alpha
-                const pulse = (Math.sin(this.time * 0.02 + layer.offset) + 1) / 2; 
-                const alpha = 0.2 + pulse * 0.25; 
+                const pulse = (Math.sin(this.time * 0.08 + layer.offset) + 1) / 2; // Much faster pulse
+                const alpha = 0.2 + pulse * 0.4; // Stronger alpha pulse (0.2 to 0.6)
 
                 const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
                 gradient.addColorStop(0, color + '0)');
@@ -961,11 +960,11 @@ class ConvolutionBackground {
                 let started = false;
                 
                 // Draw top curve
-                for (let x = 0; x <= this.width; x += 20) {
-                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
-                    const n2 = noise2d(x * layer.scale * 3, this.time * layer.speed * 2 + layer.offset);
-                    // Large amplitude waves
-                    const y = this.height * layer.yOffset + (n1 * 350 + n2 * 100);
+                for (let x = 0; x <= this.width; x += 10) { // Reduced x step for smoother curves
+                    const xCoord = (x + xDrift * layer.driftFactor); // Apply global drift, scaled per layer
+                    const n1 = noise2d(xCoord * layer.scale, this.time * layer.speed + layer.offset);
+                    const n2 = noise2d(xCoord * layer.scale * 3, this.time * layer.speed * 2 + layer.offset);
+                    const y = this.height * layer.yOffset + (n1 * 400 + n2 * 150); // Maintain high amplitude
                     
                     if (!started) {
                         this.ctx.moveTo(x, y);
@@ -975,13 +974,13 @@ class ConvolutionBackground {
                     }
                 }
                 
-                // Draw bottom with variation
-                for (let x = this.width; x >= 0; x -= 20) {
-                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 20);
-                    const n2 = noise2d(x * layer.scale * 3, this.time * layer.speed * 2 + layer.offset + 20);
-                    // Variable thickness
-                    const thickness = 150 + Math.sin(x * 0.005 + this.time * 0.01) * 50;
-                    const y = this.height * (layer.yOffset + 0.1) + (n1 * 350 + n2 * 100) + thickness;
+                // Draw bottom
+                for (let x = this.width; x >= 0; x -= 10) { // Reduced x step
+                    const xCoord = (x + xDrift * layer.driftFactor); // Apply global drift
+                    const n1 = noise2d(xCoord * layer.scale, this.time * layer.speed + layer.offset + 20);
+                    const n2 = noise2d(xCoord * layer.scale * 3, this.time * layer.speed * 2 + layer.offset + 20);
+                    const thickness = 150 + Math.sin(x * 0.01 + this.time * 0.02) * 50; // Faster thickness modulation
+                    const y = this.height * (layer.yOffset + 0.1) + (n1 * 400 + n2 * 150) + thickness;
                     this.ctx.lineTo(x, y);
                 }
                 
