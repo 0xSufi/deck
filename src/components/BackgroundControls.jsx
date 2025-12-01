@@ -31,6 +31,7 @@ export default function BackgroundControls({ onSwitchBg, onOpacityChange }) {
         { id: 'neural-nexus', label: 'Neural' },
         { id: 'hyperspace', label: 'Hyperspace' },
         { id: 'flow-field', label: 'Flow Field' },
+        { id: 'aurora-borealis', label: 'Aurora' },
     ];
 
     return (

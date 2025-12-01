@@ -518,7 +518,8 @@ class ConvolutionBackground {
             "neural-nexus",
             "hyperspace",
             "flow-field",
-            "fourier-spiral"
+            "fourier-spiral",
+            "aurora-borealis"
         ];
 
         this.type = this.types[Math.floor(Math.random() * this.types.length)];
@@ -627,6 +628,7 @@ class ConvolutionBackground {
             case "hyperspace": this.setupHyperspace(); break;
             case "flow-field": this.setupFlow(); break;
             case "fourier-spiral": this.setupFourier(); break;
+            case "aurora-borealis": this.setupAurora(); break;
             default: this.setupCosmicQuantum();
         }
 
@@ -913,6 +915,67 @@ class ConvolutionBackground {
         };
     }
 
+    setupAurora() {
+        const noise2d = createNoise2D();
+        const layers = [
+            { color: '#4ade80', speed: 0.002, scale: 0.001, offset: 0, yOffset: 0.2 },  // Green
+            { color: '#818cf8', speed: 0.003, scale: 0.0015, offset: 100, yOffset: 0.3 }, // Indigo
+            { color: '#e879f9', speed: 0.001, scale: 0.002, offset: 200, yOffset: 0.4 }, // Purple
+            { color: '#22d3ee', speed: 0.0025, scale: 0.001, offset: 300, yOffset: 0.25 } // Cyan
+        ];
+
+        this.animate = () => {
+            this.time += 1;
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            
+            // Dark background
+            this.ctx.fillStyle = 'rgba(10, 15, 30, 0.3)'; 
+            this.ctx.fillRect(0, 0, this.width, this.height);
+            
+            this.ctx.globalCompositeOperation = 'screen';
+            this.ctx.filter = 'blur(30px)';
+
+            layers.forEach(layer => {
+                this.ctx.beginPath();
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+                gradient.addColorStop(0, 'rgba(0,0,0,0)');
+                gradient.addColorStop(0.2, layer.color + '00'); // Transparent
+                gradient.addColorStop(0.5, layer.color + '88'); // Semi-transparent
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                
+                this.ctx.fillStyle = gradient;
+                
+                let started = false;
+                
+                // Draw top curve
+                for (let x = 0; x <= this.width; x += 20) {
+                    const n = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
+                    const y = this.height * layer.yOffset + n * 200;
+                    
+                    if (!started) {
+                        this.ctx.moveTo(x, y);
+                        started = true;
+                    } else {
+                        this.ctx.lineTo(x, y);
+                    }
+                }
+                
+                // Draw bottom to close shape (making a band)
+                for (let x = this.width; x >= 0; x -= 20) {
+                    const n = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 10); // Different noise for width variation
+                    const y = this.height * (layer.yOffset + 0.4) + n * 200;
+                    this.ctx.lineTo(x, y);
+                }
+                
+                this.ctx.closePath();
+                this.ctx.fill();
+            });
+
+            this.ctx.filter = 'none';
+            this.ctx.globalCompositeOperation = 'source-over';
+        };
+    }
+
     setupFourier() { this.setupFlow(); }
 
     start() {
@@ -951,7 +1014,7 @@ export function initBackground(canvas, activeType) {
         instance = new AttractorBackground(canvas);
     } else {
         instance = new ConvolutionBackground(canvas);
-        const convTypes = ["cosmic-quantum", "neural-nexus", "hyperspace", "flow-field", "fourier-spiral"];
+        const convTypes = ["cosmic-quantum", "neural-nexus", "hyperspace", "flow-field", "fourier-spiral", "aurora-borealis"];
         if (convTypes.includes(type)) {
             instance.type = type;
             instance.init();
