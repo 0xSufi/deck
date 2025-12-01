@@ -997,72 +997,74 @@ class ConvolutionBackground {
 
     setupCosmicGas() {
         const noise2d = createNoise2D();
-        const particleCount = 3000; // High density
-        
-        this.particles = [];
-        for(let i=0; i<particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.width,
-                y: Math.random() * this.height,
-                vx: 0, vy: 0,
-                life: Math.random(), // For alpha pulsing
-                size: Math.random() * 2,
-                colorHue: randomInRange(200, 320) // Blue to Pink/Purple range
-            });
-        }
+        const layers = [
+            // Example layers with cosmic colors
+            { baseHue: 200, range: 60, speed: 0.005, scale: 0.0005, offset: 0, yOffset: 0.2, thicknessFactor: 0.4 }, // Deep Blue/Purple
+            { baseHue: 280, range: 40, speed: 0.007, scale: 0.0007, offset: 100, yOffset: 0.3, thicknessFactor: 0.5 }, // Purple/Pink
+            { baseHue: 300, range: 80, speed: 0.003, scale: 0.0004, offset: 200, yOffset: 0.4, thicknessFactor: 0.6 }, // Pink/Red (more range for color shift)
+            { baseHue: 0, range: 60, speed: 0.006, scale: 0.0006, offset: 300, yOffset: 0.5, thicknessFactor: 0.3 }, // Red/Orange
+            { baseHue: 240, range: 50, speed: 0.004, scale: 0.0008, offset: 400, yOffset: 0.25, thicknessFactor: 0.7 } // Blue/Cyan
+        ];
 
         this.animate = () => {
-            this.time += 0.002;
+            this.time += 0.2; // Slower, more ethereal movement
+            this.ctx.clearRect(0, 0, this.width, this.height);
             
-            // Fade trail effect
-            this.ctx.fillStyle = 'rgba(5, 5, 10, 0.05)'; 
+            // Deep cosmic background
+            this.ctx.fillStyle = '#01010A'; // Even darker background
             this.ctx.fillRect(0, 0, this.width, this.height);
             
-            this.ctx.globalCompositeOperation = 'screen'; // Additive blending
+            this.ctx.globalCompositeOperation = 'screen'; 
+            this.ctx.filter = 'blur(60px)'; // Even heavier blur for gas clouds
 
-            this.particles.forEach(p => {
-                // Fluid motion using noise
-                const n = noise2d(p.x * 0.002, p.y * 0.002 + this.time);
-                const angle = n * Math.PI * 4;
-                
-                p.vx += Math.cos(angle) * 0.05;
-                p.vy += Math.sin(angle) * 0.05;
-                
-                // Friction
-                p.vx *= 0.96;
-                p.vy *= 0.96;
-                
-                p.x += p.vx;
-                p.y += p.vy;
-
-                // Wrap around screen
-                if(p.x < 0) p.x = this.width;
-                if(p.x > this.width) p.x = 0;
-                if(p.y < 0) p.y = this.height;
-                if(p.y > this.height) p.y = 0;
-
-                p.life += 0.01;
-                
-                // Draw gas particle
-                const alpha = (Math.sin(p.life) + 1) / 2 * 0.5;
+            layers.forEach((layer, i) => {
                 this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
-                this.ctx.fillStyle = `hsla(${p.colorHue}, 70%, 60%, ${alpha})`;
+                
+                const hue = layer.baseHue + Math.sin(this.time * 0.002 + i) * layer.range; // Slower hue shift
+                const color = `hsla(${hue}, 80%, 50%,`; 
+                
+                const pulse = (Math.sin(this.time * 0.01 + layer.offset) + 1) / 2; 
+                const alpha = 0.1 + pulse * 0.1; // More subtle alpha pulsing for gas
+
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+                gradient.addColorStop(0, color + '0)');
+                gradient.addColorStop(0.3, color + (alpha * 0.4) + ')'); 
+                gradient.addColorStop(0.5, color + alpha + ')'); 
+                gradient.addColorStop(0.7, color + (alpha * 0.4) + ')');
+                gradient.addColorStop(1, color + '0)');
+                
+                this.ctx.fillStyle = gradient;
+                
+                let started = false;
+                
+                // Draw top curve - wider amplitude for cloudiness
+                for (let x = 0; x <= this.width; x += 30) { // Larger step for broader shapes
+                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset);
+                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 1.5 + layer.offset);
+                    const y = this.height * layer.yOffset + (n1 * 500 + n2 * 200); // Very large amplitude for diffuse clouds
+                    
+                    if (!started) {
+                        this.ctx.moveTo(x, y);
+                        started = true;
+                    } else {
+                        this.ctx.lineTo(x, y);
+                    }
+                }
+                
+                // Draw bottom with varying thickness for cloud structure
+                for (let x = this.width; x >= 0; x -= 30) {
+                    const n1 = noise2d(x * layer.scale, this.time * layer.speed + layer.offset + 50);
+                    const n2 = noise2d(x * layer.scale * 2, this.time * layer.speed * 1.5 + layer.offset + 50);
+                    const thickness = this.height * layer.thicknessFactor + Math.sin(x * 0.001 + this.time * 0.005) * 100; // Varying thickness
+                    const y = this.height * (layer.yOffset + 0.1) + (n1 * 500 + n2 * 200) + thickness;
+                    this.ctx.lineTo(x, y);
+                }
+                
+                this.ctx.closePath();
                 this.ctx.fill();
             });
-            
-            // Add a second pass of larger "cloud" blobs for volume
-            this.ctx.filter = 'blur(20px)';
-            for(let i=0; i<5; i++) {
-                const cx = (this.width/2) + Math.cos(this.time + i) * 200;
-                const cy = (this.height/2) + Math.sin(this.time * 0.5 + i) * 150;
-                this.ctx.beginPath();
-                this.ctx.arc(cx, cy, 100 + Math.sin(this.time * 2 + i)*50, 0, Math.PI*2);
-                this.ctx.fillStyle = `hsla(${240 + i*20}, 60%, 40%, 0.05)`;
-                this.ctx.fill();
-            }
-            this.ctx.filter = 'none';
 
+            this.ctx.filter = 'none';
             this.ctx.globalCompositeOperation = 'source-over';
         };
     }
