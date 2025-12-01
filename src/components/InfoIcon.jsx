@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import selfRepayingGif from '../assets/self-repaying-low.gif';
 import dividendsGif from '../assets/dividends.gif';
 
@@ -36,7 +37,7 @@ export default function InfoIcon({ type = 'self-repaying' }) {
             >
                 ?
             </span>
-            {isOpen && (
+            {isOpen && createPortal(
                 <div className="info-overlay" onClick={handleClose}>
                     <div className="info-overlay-content" onClick={(e) => e.stopPropagation()}>
                         <button className="info-overlay-close" onClick={handleClose}>
@@ -47,7 +48,8 @@ export default function InfoIcon({ type = 'self-repaying' }) {
                             alt={gif.alt}
                         />
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );
