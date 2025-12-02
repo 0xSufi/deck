@@ -25,9 +25,9 @@ export default function ProblemFoundersSlide({ isActive }) {
                                 <path d="M30 90 L70 90" />
                                 <path d="M10 40 L50 20 L90 30" stroke="var(--accent-primary)" strokeWidth="3"/>
                                 <path d="M10 40 L10 65" />
-                                <path d="M0 65 A15 8 0 0 0 20 65" fill="rgba(99, 102, 241, 0.2)" />
+                                <path d="M0 65 A15 8 0 0 0 20 65" fill="rgba(34, 197, 94, 0.2)" />
                                 <path d="M90 30 L90 45" />
-                                <path d="M80 45 A15 8 0 0 0 100 45" fill="rgba(168, 85, 247, 0.2)" />
+                                <path d="M80 45 A15 8 0 0 0 100 45" fill="rgba(74, 222, 128, 0.2)" />
                                 <path d="M45 15 L55 25 M55 15 L45 25" stroke="var(--accent-tertiary)" />
                             </svg>
                         </div>

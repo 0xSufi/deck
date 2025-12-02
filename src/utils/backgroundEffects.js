@@ -102,7 +102,8 @@ class AttractorBackground {
             precompute: Math.floor(randomInRange(1500, 6000))
         };
 
-        this.baseColors = ["#4ade80", "#60a5fa", "#f472b6", "#fbbf24", "#a78bfa", "#f87171", "#34d399", "#38bdf8"];
+        // Green-based palette
+        this.baseColors = ["#4ade80", "#22c55e", "#90ee90", "#16a34a", "#86efac", "#bbf7d0", "#10b981", "#34d399"];
         this.selectedColor = this.baseColors[Math.floor(Math.random() * this.baseColors.length)];
 
         // Rotation state
@@ -524,11 +525,14 @@ class ConvolutionBackground {
         ];
 
         this.type = this.types[Math.floor(Math.random() * this.types.length)];
-
+        
+        // Green palette preference for random generation
+        this.baseHue = randomInRange(100, 160); // Green range (roughly 100-160 deg)
+        
         this.randomColors = [this.randomColor(), this.randomColor(), this.randomColor(), this.randomColor()];
         this.colorMode = randomInt(0, 5);
         this.presetScheme = randomInt(0, 12);
-        this.baseHue = Math.random() * 360;
+        
         this.colorShift = randomInRange(0.1, 0.5);
         this.saturationRange = [randomInRange(50, 70), randomInRange(80, 100)];
         this.lightnessRange = [randomInRange(40, 55), randomInRange(60, 75)];
@@ -562,26 +566,27 @@ class ConvolutionBackground {
             spiralLineWidthMax: randomInRange(3, 8)
         };
 
+        // Green-centric preset palettes
         this.presetPalettes = [
-            ["#4ade80", "#60a5fa", "#f472b6", "#fbbf24"],
-            ["#fbbf24", "#f87171", "#a78bfa", "#34d399"],
-            ["#34d399", "#38bdf8", "#e879f9", "#fb923c"],
-            ["#22d3d2", "#818cf8", "#fb7185", "#a3e635"],
-            ["#84cc16", "#06b6d4", "#d946ef", "#f43f5e"],
-            ["#f97316", "#ec4899", "#8b5cf6", "#14b8a6"],
-            ["#ef4444", "#f59e0b", "#10b981", "#3b82f6"],
-            ["#6366f1", "#ec4899", "#f59e0b", "#22c55e"],
-            ["#8b5cf6", "#06b6d4", "#f43f5e", "#84cc16"],
-            ["#0ea5e9", "#f472b6", "#fcd34d", "#4ade80"],
-            ["#a855f7", "#22d3ee", "#fb7185", "#facc15"],
-            ["#14b8a6", "#f97316", "#a78bfa", "#f472b6"],
+            ["#4ade80", "#22c55e", "#90ee90", "#16a34a"],
+            ["#86efac", "#22c55e", "#166534", "#4ade80"],
+            ["#10b981", "#34d399", "#059669", "#6ee7b7"],
+            ["#84cc16", "#65a30d", "#bef264", "#a3e635"],
+            ["#a3e635", "#4ade80", "#16a34a", "#22c55e"],
+            ["#4ade80", "#34d399", "#10b981", "#059669"],
+            ["#22c55e", "#15803d", "#86efac", "#bbf7d0"],
+            ["#86efac", "#4ade80", "#10b981", "#047857"],
+            ["#34d399", "#10b981", "#059669", "#064e3b"],
+            ["#a7f3d0", "#6ee7b7", "#34d399", "#10b981"],
+            ["#dcfce7", "#bbf7d0", "#86efac", "#4ade80"],
+            ["#f0fdf4", "#dcfce7", "#bbf7d0", "#86efac"],
         ];
 
         this.init();
     }
 
     randomColor() {
-        const h = Math.random() * 360;
+        const h = this.baseHue + randomInRange(-20, 20); // Variations around green
         const s = randomInRange(60, 100);
         const l = randomInRange(45, 70);
         return hslToHex(h, s, l);
@@ -683,12 +688,13 @@ class ConvolutionBackground {
         const particleCount = 2000;
         const cosmicScale = 0.003;
 
+        // Green cosmic colors
         const colors = [
-            {r: 15, g: 23, b: 42},
-            {r: 67, g: 56, b: 202},
-            {r: 168, g: 85, b: 247},
-            {r: 236, g: 72, b: 153},
-            {r: 103, g: 232, b: 249}
+            {r: 15, g: 30, b: 20}, // Dark green/black
+            {r: 34, g: 197, b: 94}, // Green 500
+            {r: 74, g: 222, b: 128}, // Green 400
+            {r: 134, g: 239, b: 172}, // Green 300
+            {r: 22, g: 101, b: 52}   // Dark green
         ];
 
         const getCosmicColor = (t) => {
@@ -778,13 +784,13 @@ class ConvolutionBackground {
             });
 
             this.ctx.lineWidth = 1;
-            this.ctx.strokeStyle = "rgba(99, 102, 241, 0.5)";
+            this.ctx.strokeStyle = "rgba(34, 197, 94, 0.5)"; // Green 500
 
             for (let i = 0; i < numNodes; i++) {
                 const n1 = this.nodes[i];
                 this.ctx.beginPath();
                 this.ctx.arc(n1.x, n1.y, n1.radius, 0, Math.PI * 2);
-                this.ctx.fillStyle = "#a5b4fc";
+                this.ctx.fillStyle = "#86efac"; // Green 300
                 this.ctx.fill();
 
                 for (let j = i + 1; j < numNodes; j++) {
@@ -798,7 +804,7 @@ class ConvolutionBackground {
                         this.ctx.moveTo(n1.x, n1.y);
                         this.ctx.lineTo(n2.x, n2.y);
                         const alpha = 1 - (dist / maxDist);
-                        this.ctx.strokeStyle = `rgba(168, 85, 247, ${alpha * 0.6})`;
+                        this.ctx.strokeStyle = `rgba(74, 222, 128, ${alpha * 0.6})`; // Green 400
                         this.ctx.stroke();
                     }
                 }
@@ -839,7 +845,7 @@ class ConvolutionBackground {
                 if (px >= 0 && px <= this.width && py >= 0 && py <= this.height) {
                     const size = (1 - star.z / this.width) * 3;
                     const shade = parseInt((1 - star.z / this.width) * 255);
-                    this.ctx.fillStyle = `rgb(${shade}, ${shade}, 255)`;
+                    this.ctx.fillStyle = `rgb(${shade}, 255, ${shade})`; // Greenish stars
                     this.ctx.beginPath();
                     this.ctx.arc(px, py, size, 0, Math.PI * 2);
                     this.ctx.fill();
@@ -920,12 +926,12 @@ class ConvolutionBackground {
     setupAurora() {
         const noise2d = createNoise2D();
         const layers = [
-            { baseHue: 160, range: 30, speed: 0.03, scale: 0.004, offset: 0, yOffset: 0.3, driftFactor: 0.0005 },   // Teal/Green
-            { baseHue: 270, range: 40, speed: 0.04, scale: 0.005, offset: 100, yOffset: 0.4, driftFactor: 0.0007 }, // Purple
-            { baseHue: 320, range: 30, speed: 0.025, scale: 0.006, offset: 200, yOffset: 0.5, driftFactor: 0.0004 }, // Pink
-            { baseHue: 200, range: 40, speed: 0.045, scale: 0.0045, offset: 300, yOffset: 0.35, driftFactor: 0.0008 }, // Blue
-            { baseHue: 120, range: 40, speed: 0.035, scale: 0.0055, offset: 400, yOffset: 0.45, driftFactor: 0.0006 }, // Green
-            { baseHue: 240, range: 50, speed: 0.042, scale: 0.005, offset: 500, yOffset: 0.55, driftFactor: 0.0009 }  // Deep Blue/Violet
+            { baseHue: 140, range: 30, speed: 0.03, scale: 0.004, offset: 0, yOffset: 0.3, driftFactor: 0.0005 },   // Green
+            { baseHue: 160, range: 40, speed: 0.04, scale: 0.005, offset: 100, yOffset: 0.4, driftFactor: 0.0007 }, // Teal/Green
+            { baseHue: 120, range: 30, speed: 0.025, scale: 0.006, offset: 200, yOffset: 0.5, driftFactor: 0.0004 }, // Lime
+            { baseHue: 100, range: 40, speed: 0.045, scale: 0.0045, offset: 300, yOffset: 0.35, driftFactor: 0.0008 }, // Yellow-Green
+            { baseHue: 180, range: 40, speed: 0.035, scale: 0.0055, offset: 400, yOffset: 0.45, driftFactor: 0.0006 }, // Cyan
+            { baseHue: 150, range: 50, speed: 0.042, scale: 0.005, offset: 500, yOffset: 0.55, driftFactor: 0.0009 }  // Spring Green
         ];
 
         let xDrift = 0; // Cumulative horizontal drift
@@ -998,11 +1004,11 @@ class ConvolutionBackground {
     setupCosmicGas() {
         const noise2d = createNoise2D();
         const layers = [
-            { baseHue: 220, range: 60, speed: 0.02, scale: 0.003, offset: 0, yOffset: 0.2, thicknessFactor: 0.5, drift: 0.0002 }, // Deep Blue
-            { baseHue: 280, range: 50, speed: 0.03, scale: 0.004, offset: 100, yOffset: 0.35, thicknessFactor: 0.6, drift: 0.0003 }, // Purple
-            { baseHue: 340, range: 60, speed: 0.015, scale: 0.0025, offset: 200, yOffset: 0.5, thicknessFactor: 0.7, drift: 0.0001 }, // Pink/Red
+            { baseHue: 140, range: 60, speed: 0.02, scale: 0.003, offset: 0, yOffset: 0.2, thicknessFactor: 0.5, drift: 0.0002 }, // Green
+            { baseHue: 160, range: 50, speed: 0.03, scale: 0.004, offset: 100, yOffset: 0.35, thicknessFactor: 0.6, drift: 0.0003 }, // Teal
+            { baseHue: 120, range: 60, speed: 0.015, scale: 0.0025, offset: 200, yOffset: 0.5, thicknessFactor: 0.7, drift: 0.0001 }, // Lime
             { baseHue: 180, range: 40, speed: 0.025, scale: 0.0035, offset: 300, yOffset: 0.4, thicknessFactor: 0.4, drift: 0.0004 }, // Cyan
-            { baseHue: 260, range: 50, speed: 0.02, scale: 0.003, offset: 400, yOffset: 0.6, thicknessFactor: 0.6, drift: 0.0002 }  // Violet
+            { baseHue: 100, range: 50, speed: 0.02, scale: 0.003, offset: 400, yOffset: 0.6, thicknessFactor: 0.6, drift: 0.0002 }  // Yellow-Green
         ];
 
         let xDrift = 0;

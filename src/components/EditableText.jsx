@@ -69,7 +69,7 @@ export default function EditableText({
     const editableStyle = editMode ? {
         ...style,
         cursor: 'pointer',
-        outline: '2px dashed rgba(99, 102, 241, 0.4)',
+        outline: '2px dashed rgba(34, 197, 94, 0.4)',
         outlineOffset: '4px',
         borderRadius: '4px',
         transition: 'outline-color 0.2s'

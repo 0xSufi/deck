@@ -20,9 +20,10 @@ export default function HeroSlide({ isActive }) {
                     alt="Noma Protocol Logo"
                     style={{
                         display: 'block',
+                        marginTop: '10px',
                         margin: '1.5rem auto',
-                        height: '100px',
-                        filter: 'drop-shadow(0 0 20px rgba(99, 102, 241, 0.4))'
+                        height: '120px',
+                        filter: 'drop-shadow(0 0 20px rgba(34, 197, 94, 0.4))'
                     }}
                 />
                 <EditableText textKey="hero_title" as="h1" />
